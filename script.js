@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isBatActive = false;
 
     // The time in milliseconds the cursor has to be inactive before the bat appears (10 seconds)
-    const INACTIVITY_TIME = 3000; 
+    const INACTIVITY_TIME = 5000; 
 
     // Function to show the bat and start its animation
     const showBat = (mouseX, mouseY) => {
@@ -127,4 +127,5 @@ const startCircling = (centerX, centerY) => {
         clearTimeout(cursorTimeout);
         cursorTimeout = setTimeout(() => showBat(touch.clientX, touch.clientY), INACTIVITY_TIME);
     });
+
 });
