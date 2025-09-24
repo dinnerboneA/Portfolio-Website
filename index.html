@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/jpg" href="favicon.jpg"> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protfolio Website</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    
+    <div id="bat-container">
+        <img id="bat-image" src="" alt="Flying bat animation">
+    </div>
+
+
+    <style>
+
+        body  {
+
+            background-image: url("Background.png"); 
+            background-attachment: scroll;        
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        } 
+
+    </style>
+
+    <style>
+
+        body::before {
+
+            content: "";
+            position: fixed;
+            inset: 0;
+            backdrop-filter: blur(2px);
+            z-index: -1; 
+
+        }
+
+    </style>
+
+
+    <header class="header">
+        <a href="#" class="logo"><span>Ahmed Bin Faisal</span></a>
+
+        <ul class="nav-links">
+            <li>
+                <a href="#about">About</a>
+            </li>
+
+            <li>
+                <a href="#experience">Experience</a>
+            </li>
+
+            <li>
+                <a href="#education">Education</a>
+            </li>
+
+            <li>
+                <a href="#skills">Skills</a>
+            </li>
+
+            <li>
+                <a href="#projects">Projects</a>
+            </li>
+
+            <li>
+                <a href="#contact">Contacts</a>
+            </li>
+
+        </ul>
+
+        <i class="fa-solid fa-bars" id="menu-icon"></i>
+
+        <button class="visit-btn">Visit Github</button>
+
+    </header>
+
+    <section id="about" class="about">
+        <div class="about-container">
+
+            <img src="ProfilePicture.png" alt="Ahmed Bin Faisal Profile Picture">
+
+            <div class="info-box">
+
+                <div class="text">
+
+                    <h3> Hi, I'm</h3>
+                    <h1>Ahmed Bin Faisal</h1>
+                    <span>AI Developer</span>
+
+                </div>
+
+                <div class="btn-group">
+                    
+                    <div class="btn" id="download-cv-btn">Download CV</div>
+                    <div class="btn" id="contact-me-btn">Contact</div>
+
+                </div>
+
+                <div class="socials">
+
+                    <i class="fa-brands fa-github" id="github-social"></i>
+                    <i class="fa-brands fa-linkedin" id="linkedin-social"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+   
+
+    <section id="education" class="education">
+        <h2 class="section-title">Education</h2>
+        <div class="education-container">
+            <img src="University.png" alt="University Building" class="education-image">
+            <div class="education-card grid-card">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>Bachelor's Degree</span>
+                <h3>Computer Science</h3>
+                <p>Asia Pacific University of Technology & Innovation, Kuala Lumpur, Malaysia</p>
+                <p>2023 - 2026</p>
+                
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="skills">
+        <h2 class="section-title">Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-item">
+                <i class="fa-brands fa-python"></i>
+                <span>Python</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-solid fa-c"></i>
+                <span>C</span>
+            </div>
+            <div class="skill-item">
+                </i><i class="fa-solid fa-plus"></i>
+                <span>C++</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-solid fa-hashtag"></i>
+                <span>C#</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-brands fa-java"></i>
+                <span>Java</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-solid fa-puzzle-piece"></i>
+                <span>TASM</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-solid fa-database"></i>
+                <span>MySQL</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>NLP</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>REST APIs</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-solid fa-laptop-code"></i>
+                <span>ML</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-solid fa-microchip"></i>
+                <span>AI Development</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-brands fa-js"></i>
+                <span>JavaScript</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-brands fa-html5"></i>
+                <span>HTML5</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-solid fa-arrows-spin"></i>
+                <span>SDLC</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-solid fa-network-wired"></i>
+                <span>Networking</span>
+            </div>
+            <div class="skill-item">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Data Analysis</span>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="experience" class="experience">
+
+            <h2 class="section-title">Experience</h2>
+            <div class="experience-info">
+
+            <div class="grid">
+
+                <div class="grid-card">
+
+                    <i class="fa-solid fa-code"></i>
+                    <span>AI Developer</span>
+                    <h3>2 years</h3>
+                    <p>Developed NattyAI chatbot, integrating REST APIs to deliver personalized fitness guidance in real time.</p>
+
+                </div>
+
+                <div class="grid-card">
+
+                    <i class="fa-solid fa-file-code"></i>
+                    <span>Software Development</span>
+                    <h3>2 years</h3>
+                    <p>Built and deployed a Python-based game and many other projects demonstrating core programming, problem-solving, and interactive design.</p>
+
+                </div>
+
+                <div class="grid-card">
+
+                    <i class="fa-solid fa-laptop"></i>
+                    <span>Web Development</span>
+                    <h3>1 years</h3>
+                    <p>Designed and launched a personal portfolio website (abfportfolio.vercel.app) using HTML, CSS, and JavaScript to showcase projects and skills.</p>
+
+                </div>
+
+                <div class="grid-card">
+
+                    <i class="fa-solid fa-list"></i>
+                    <span>UI designer</span>
+                    <h3>2 years</h3>
+                    <p>Created Wardrobe.AI interface to showcase AI-driven fashion recommendations through a user-friendly design prototype.</p>
+
+                </div>
+
+            </div>
+
+                <img src="ProfilePicture2.png" alt="Ahmed Bin Faisal Profile Picture 2">
+            </div>
+
+
+
+
+    </section>
+
+
+
+    <section id="projects" class="projects">
+
+        <h2 class="section-title">Recent Projects</h2>
+
+        <div class="projects-grid">
+
+            <div class="project-card">
+
+                <img src="RecentProject1.png" alt="PyGame Loser Project">
+                <h3>PyGame "loser"</h3>
+                <p>A Python-based game showcasing logic design, scoring system, and event handling.</p>
+                <div class="btn-group">
+
+                    <div class="btn">Live Demo</div>
+                    <div class="btn" id="repo-btn-1">GitHub Repo</div>
+
+                </div>
+
+            </div>
+
+            <div class="project-card">
+
+                <img src="RecentProject2.png" alt="NattyAI ChatBot Project">
+                <h3>NattyAI ChatBot</h3>
+                <p>A fitness-oriented healthcare chatbot built with Python and REST APIs to recommend exercises and workouts.</p>
+                <div class="btn-group">
+
+                    <div class="btn">Live Demo</div>
+                    <div class="btn" id="repo-btn-2">GitHub Repo</div>
+
+                </div>
+
+            </div>
+
+            <div class="project-card">
+
+                <img src="RecentProject3.png" alt="Wardrobe.AI UI Design Project">
+                <h3>Wardrobe.AI UI design</h3>
+                <p>A clothing recommendation concept using AI and computer vision, presented with a clean, user-friendly UI.</p>
+                <div class="btn-group">
+
+                    <div class="btn">Live Demo</div>
+                    <div class="btn" id="repo-btn-3">GitHub Repo</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+    <section class="contact" id="contact">
+
+        <h2 class="section-title">Contact Me</h2>
+
+        <div class="contact-info-grid">
+            <div class="contact-item">
+                <a href="mailto:Ahmedfaisal1255@gmail.com" target="_blank">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>Ahmedfaisal1255@gmail.com</span>
+                </a>
+            </div>
+            <div class="contact-item">
+                <a href="tel:+1234567890">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>+60 163 172 767</span>
+                </a>
+            </div>
+            <div class="contact-item">
+                <a href="https://www.linkedin.com/in/ahmed-bin-faisal-3025972a1/" target="_blank">
+                    <i class="fa-brands fa-linkedin"></i>
+                    <span>Ahmed Bin Faisal</span>
+                </a>
+            </div>
+        </div>
+
+        <form class="email-form" id="contactForm">
+            <div class="input">
+                <input type="email" name="email" placeholder="example@email.com" required>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+            <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+            <button type="submit" class="btn">Submit</button>
+        </form>
+
+    </section>
+
+    <footer>
+
+        <ul>
+
+            <li>
+
+                <a href="#about">About</a>
+
+            </li>
+            
+            <li>
+
+                <a href="#experience">Experience</a>
+
+            </li>
+
+            <li>
+                <a href="#education">Education</a>
+            </li>
+
+            <li>
+                <a href="#skills">Skills</a>
+            </li>
+
+            <li>
+
+                <a href="#projects">Projects</a>
+
+            </li>
+            
+            <li>
+
+                <a href="#contact">Contact</a>
+
+            </li>
+
+        </ul>
+
+        <p class="copyright">© ALL Rights Reserved | Ahmed Bin Faisal</p>
+
+    </footer>
+
+
+    <script>
+
+        document.querySelector('.visit-btn').onclick = () =>
+        window.open('https://github.com/dinnerboneA', '_blank');
+
+
+        document.querySelector('#github-social').onclick  = () =>
+        window.open('https://github.com/dinnerboneA', '_blank');
+        document.querySelector('#linkedin-social').onclick = () =>
+        window.open('https://www.linkedin.com/in/ahmed-bin-faisal-3025972a1/', '_blank');
+
+
+        document.querySelector('#download-cv-btn').onclick = () => {
+        const link = document.createElement('a');
+        link.href = 'ABF CV.pdf';         
+        link.download = 'Ahmed_Bin_Faisal_CV.pdf';
+        link.click();
+         };
+
+  
+        document.querySelector('#contact-me-btn').onclick = () => {
+            document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
+        };
+
+
+
+        document.querySelector('#repo-btn-1').onclick = () =>
+        window.open('https://github.com/dinnerboneA/PythonGameLoser', '_blank'); 
+        
+        document.querySelector('#repo-btn-2').onclick = () =>
+        window.open('https://cdn.botpress.cloud/webchat/v2/shareable.html?botId=1da4f33a-d062-40aa-b784-becf49e71b0c', '_blank'); 
+
+        document.querySelector('#repo-btn-3').onclick = () =>
+        window.open('https://github.com/dinnerboneA/WardrobeAIDesign', '_blank');
+
+
+    </script>
+
+
+
+    <script src="script.js"></script>
+</body>
+</html>
