@@ -6,7 +6,23 @@
     text-decoration: none;
     scroll-behavior: smooth;
     list-style: none;
+}
 
+body {
+    position: relative;
+}
+
+#background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* This will now work correctly */
+    z-index: -1;
+    filter: blur(4px); /* Your blur value */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 #bat-container {
@@ -111,7 +127,6 @@ li a:hover::before{
 
 }
 
-
 section{
     min-height: 100vh;
     padding: 8rem 12%;
@@ -148,6 +163,7 @@ section{
     align-items: center;
     justify-content: center;
     gap: 1.5rem;
+    color: white;
 
 }   
 
@@ -181,7 +197,7 @@ section{
 .btn{
     border-radius: 3rem;
     padding: 0.5rem 1.5rem;
-    border: 2px solid black;
+    border: 2px solid white;
     cursor: pointer;
     font-weight: 500;
     text-wrap: nowrap;
@@ -194,6 +210,7 @@ section{
 .btn:hover{
     background-color: black;
     color: white;
+    border: 2px solid black;
 
 }
 
@@ -222,6 +239,7 @@ section{
     font-size: 4rem;
     font-weight: 600;
     margin-bottom: 3rem;
+    color: white;
 
 }
 
@@ -230,12 +248,14 @@ section{
     align-items: center;
     justify-content: center;
     gap: 5rem;
+    color: white;
 
 }
 
 .experience img{
     width: 24vw;
     border-radius: 3rem;
+
 
 }
 
@@ -248,7 +268,7 @@ section{
 }
 
 .grid-card{
-    border: 2px solid black;
+    border: 2px solid white;
     border-radius: 3rem;
     padding: 3rem;
     display: flex;
@@ -266,6 +286,7 @@ section{
     transform: scale(1.02);
     background-color: black;
     color: white;
+    border: 2px solid black;
 
 }
 
@@ -292,6 +313,7 @@ section{
     justify-content: center;
     gap: 5rem;
     flex-wrap: wrap; 
+    color: white;
 }
 
 .education-image {
@@ -302,7 +324,7 @@ section{
 }
 
 .education-card {
-    border: 2px solid black;
+    border: 2px solid white;
     border-radius: 3rem;
     padding: 3rem;
     display: flex;
@@ -319,6 +341,7 @@ section{
     transform: scale(1.02);
     background-color: black;
     color: white;
+    border: black;
 }
 
 .education-card h3 {
@@ -341,10 +364,11 @@ section{
     justify-content: center;
     align-items: center;
     text-align: center;
+    color: white;
 }
 
 .skill-item {
-    border: 2px solid black;
+    border: 2px solid white;
     border-radius: 1.5rem;
     padding: 2rem 1rem;
     display: flex;
@@ -361,11 +385,13 @@ section{
     transform: scale(1.05);
     background-color: black;
     color: white;
+    border: black;
+
 }
 
 .skill-item i {
     font-size: 3.5rem;
-    background: black;
+    background: white;
     background-clip: text;
     color: transparent;
 }
@@ -412,12 +438,12 @@ section{
     justify-content: center;
     text-align: center;
     gap: 1.5rem;
-    border: 2px solid black;
+    border: 2px solid white;
     border-radius: 3rem;
     cursor: pointer;
     transition: 0.3s ease-in-out;
     backdrop-filter: blur(4px);
-
+    color: white;
 
 }
 
@@ -425,6 +451,8 @@ section{
     background-color: black;
     color: white;
     transform: translate(-10px)scale(1.02);
+    border: 2px solid black;
+
 
 }
 
@@ -471,7 +499,7 @@ section{
 }
 
 .contact-item {
-    border: 2px solid black;
+    border: 2px solid white;
     border-radius: 3rem;
     padding: 2rem;
     display: flex;
@@ -485,7 +513,7 @@ section{
 }
 
 .contact-item a {
-    color: black; 
+    color: white; 
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -496,6 +524,8 @@ section{
     background-color: black;
     color: white;
     transform: scale(1.02);
+    border: 2px solid white;
+
 }
 
 .contact-item:hover a {
@@ -504,7 +534,7 @@ section{
 
 .contact-item i {
     font-size: 3rem;
-    background: black;
+    background: white;
     background-clip: text;
     color: transparent;
 }
@@ -539,13 +569,14 @@ section{
 .email-form textarea {
     width: 100%;
     border-radius: 3rem;
-    border: 2px solid black;
+    border: 2px solid white;
     padding: 1.5rem 2rem 1.5rem 5rem; 
     font-size: 1.2rem;
     outline: none;
     resize: vertical; 
     background-color: transparent;
     backdrop-filter: blur(4px);
+    color: white;
 
 
 }
@@ -561,7 +592,7 @@ section{
 .email-form input::placeholder,
 .email-form textarea::placeholder {
     font-size: 1.2rem;
-    opacity: 0.5;
+    opacity: 0.4;
     color: white;
 }
 
@@ -571,7 +602,7 @@ section{
     top: 50%;
     left: 20px;
     transform: translateY(-50%);
-    color: black; 
+    color: white; 
 }
 
 .email-form .btn {
@@ -603,6 +634,13 @@ footer{
 
 }
 
+.footer-icon {
+    width: 26px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
 footer ul{
     display: flex;
     align-items: center;
@@ -611,18 +649,90 @@ footer ul{
 }
 
 footer ul li a{
-    color: black;
+    color: white;
     font-weight: 600;
 
 }
 
 .copyright{
+    color: white;
+    opacity: 0.65;
     font-size: 300;
     margin-top: 2rem;
 
 }
 
+#preloader{
+    background: black url(loader.gif) no-repeat center center;
+    background-size: 15%;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    z-index: 99999;
 
+}
+
+
+
+
+
+/* === THEME SLIDER STYLES (Using Local Files) === */
+.theme-slider {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1001;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  cursor: pointer;
+}
+
+.theme-slider input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 34px;
+  transition: background-color 0.4s;
+}
+
+
+/* Thumb with the SUN icon */
+.slider-track:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.4s;
+  background-image: url('assets/sun.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px; /* ADD THIS LINE */
+}
+
+/* Checked state (Dark Mode) */
+input:checked + .slider-track {
+  background-color: #4c4c4c;
+}
+
+/* Thumb with the MOON icon */
+input:checked + .slider-track:before {
+  transform: translateX(26px);
+  background-image: url('moon.svg'); /* Path to local moon icon */
+}
 
 
 

@@ -3,108 +3,104 @@ const navlinks = document.querySelector('.nav-links');
 
 menuIcon.onclick = () => {
     navlinks.classList.toggle('active');
-    
 }
-
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const batContainer = document.getElementById('bat-container');
     const batImage = document.getElementById('bat-image');
     let cursorTimeout;
     let isBatActive = false;
+    let circleInterval; // Keep a reference to the interval to clear it
 
-    // The time in milliseconds the cursor has to be inactive before the bat appears (10 seconds)
-    const INACTIVITY_TIME = 5000; 
+    const INACTIVITY_TIME = 5000;
+    const FLIGHT_DURATION = 3000; // This should match the 'transform' duration in your CSS
 
     // Function to show the bat and start its animation
     const showBat = (mouseX, mouseY) => {
-        if (isBatActive) return; // Prevent multiple bats from appearing
+        if (isBatActive) return;
 
         isBatActive = true;
         const screenWidth = window.innerWidth;
         
-        // Decide whether to start the bat from the left or right
-        const startPositionX = (Math.random() > 0.5) ? -100 : screenWidth + 100;
-        const targetPositionX = mouseX;
+        // Start position is off-screen
+        const startX = (Math.random() > 0.5) ? -100 : screenWidth + 100;
         
-        // Change the GIF based on the direction of travel
-        if (startPositionX === -100) {
-            batImage.src = 'bat-right.gif'; // Moving from left to right
-        } else {
-            batImage.src = 'bat-left.gif'; // Moving from right to left
-        }
+        // Set GIF based on direction
+        batImage.src = (startX < mouseX) ? 'bat-right.gif' : 'bat-left.gif';
 
-        // Set the bat's initial position
-        batContainer.style.top = `${mouseY}px`;
-        batContainer.style.left = `${startPositionX}px`;
+        // Position the bat off-screen using transform
+        batContainer.style.transition = 'none'; // Temporarily disable transition to set start point
+        batContainer.style.transform = `translate(${startX}px, ${mouseY}px)`;
+        batContainer.style.opacity = '1';
 
-        // Make the bat visible and animate its movement to the cursor
+        // Force browser to apply the change before re-enabling transition
         setTimeout(() => {
-            batContainer.style.opacity = '1';
-            batContainer.style.transform = `translate(${targetPositionX - startPositionX}px, 0)`;
-        }, 50);
+            batContainer.style.transition = `transform ${FLIGHT_DURATION / 1000}s linear, opacity 1s ease-in-out`;
+            // Animate to the cursor position
+            batContainer.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+        }, 20);
 
-        // After the bat arrives, it will "circle" the cursor
+        // After the bat arrives, start circling
         setTimeout(() => {
             if (isBatActive) {
-                // The bat is now around the cursor, start the circling animation
-                startCircling(targetPositionX, mouseY);
+                startCircling(mouseX, mouseY);
             }
-        }, 3000); // Wait for 2 seconds (the CSS transition time)
+        }, FLIGHT_DURATION);
     };
 
-// Function for the circling behavior
-const startCircling = (centerX, centerY) => {
-    const radius = 400; // Radius of the circle
-    let angle = 0; // Starting angle
-    let currentDirection = ''; // Store the current bat direction
+    // Function for the circling behavior
+    const startCircling = (centerX, centerY) => {
+        const radius = 70; // Smaller radius looks better for circling
+        let angle = 0;
+        let lastDirection = '';
 
-    const circleInterval = setInterval(() => {
-        if (!isBatActive) {
-            clearInterval(circleInterval); // Stop circling if the bat is inactive
-            return;
-        }
+        // Make the bat transition smoothly during circling
+        batContainer.style.transition = 'transform 0.1s linear';
 
-        const x = centerX + radius * Math.cos(angle);
-        const y = centerY + radius * Math.sin(angle);
-        
-        // Determine the new direction based on the bat's horizontal movement
-        const newDirection = (Math.cos(angle) > 0) ? 'right' : 'left';
-        
-        // Only change the GIF source if the direction has flipped
-        if (newDirection !== currentDirection) {
-            if (newDirection === 'right') {
-                batImage.src = 'bat-right.gif';
-            } else {
-                batImage.src = 'bat-left.gif';
+        circleInterval = setInterval(() => {
+            if (!isBatActive) {
+                clearInterval(circleInterval);
+                return;
             }
-            currentDirection = newDirection;
-        }
 
-        batContainer.style.transform = `translate(${x - batContainer.offsetLeft}px, ${y - batContainer.offsetTop}px)`;
-        
-        angle += 0.1; // Adjust speed of circling
-    }, 50);
-};
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+
+            // Determine direction based on angle
+            const direction = Math.sin(angle) > 0 ? 'left' : 'right';
+
+            if (direction !== lastDirection) {
+                batImage.src = (direction === 'left') ? 'bat-left.gif' : 'bat-right.gif';
+                lastDirection = direction;
+            }
+            
+            batContainer.style.transform = `translate(${x}px, ${y}px)`;
+            angle += 0.1; // Circling speed
+        }, 50);
+    };
 
     // Function to hide the bat
     const hideBat = () => {
         if (!isBatActive) return;
         isBatActive = false;
-        
-        // Get current position
-        const currentX = batContainer.offsetLeft;
+        clearInterval(circleInterval); // IMPORTANT: Stop the circling interval
+
+        // Get the current transformed position
+        const transformMatrix = new WebKitCSSMatrix(window.getComputedStyle(batContainer).transform);
+        const currentX = transformMatrix.m41;
+
         const screenWidth = window.innerWidth;
-
-        // Decide which way to fly off screen
         const flyOffX = (currentX > screenWidth / 2) ? screenWidth + 100 : -100;
-
+        
+        batImage.src = (flyOffX > currentX) ? 'bat-right.gif' : 'bat-left.gif';
+        
+        // Use the current Y position for a smooth exit
+        const currentY = transformMatrix.m42;
+        batContainer.style.transition = `transform ${FLIGHT_DURATION / 1000}s linear, opacity 1s ease-in-out`;
+        batContainer.style.transform = `translate(${flyOffX}px, ${currentY}px)`;
         batContainer.style.opacity = '0';
-        batContainer.style.transform = `translate(${flyOffX - currentX}px, 0)`;
     };
-    
+
     // Reset timer on any mouse movement
     document.addEventListener('mousemove', (e) => {
         clearTimeout(cursorTimeout);
@@ -113,6 +109,7 @@ const startCircling = (centerX, centerY) => {
         }
         cursorTimeout = setTimeout(() => showBat(e.clientX, e.clientY), INACTIVITY_TIME);
     });
+    
 
     // Handle touch events for mobile
     document.addEventListener('touchstart', () => {
@@ -128,4 +125,13 @@ const startCircling = (centerX, centerY) => {
         cursorTimeout = setTimeout(() => showBat(touch.clientX, touch.clientY), INACTIVITY_TIME);
     });
 
-});
+    // ... your existing code for touch events ...
+    document.addEventListener('touchend', (e) => {
+        const touch = e.changedTouches[0];
+        clearTimeout(cursorTimeout);
+        cursorTimeout = setTimeout(() => showBat(touch.clientX, touch.clientY), INACTIVITY_TIME);
+    });
+
+
+}); // This is the closing tag for DOMContentLoaded
+
