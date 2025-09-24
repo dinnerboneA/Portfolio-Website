@@ -1,0 +1,937 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins';
+    text-decoration: none;
+    scroll-behavior: smooth;
+    list-style: none;
+}
+
+body {
+    position: relative;
+}
+
+#background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* This will now work correctly */
+    z-index: -1;
+    filter: blur(4px); /* Your blur value */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#bat-container {
+    position: fixed; /* Positions the bat relative to the viewport */
+    top: -100px; /* Initially off-screen, a bit above the top */
+    left: -100px; /* Initially off-screen, a bit to the left */
+    z-index: 9999; /* Makes sure the bat is on top of all other content */
+    pointer-events: none; /* Allows clicks to go through the bat to elements below it */
+    opacity: 0; /* Starts hidden */
+    transition: opacity 1s ease-in-out, transform 2s linear; /* Smooth animation for showing/hiding and movement */
+}
+
+#bat-image {
+    width: 100px; /* Adjust the size of your bat GIF */
+    height: auto;
+}
+
+
+header{
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius:3rem;
+    z-index: 1000;
+
+}
+.logo{
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-wrap: nowrap;
+    transition: 0.3s ease-in-out;
+
+}
+
+.logo:hover{
+    transform: scale(1.1);
+}
+
+.nav-links{
+    display: flex;
+    gap: 2rem;
+}
+
+li a{
+    position: relative;
+    color: white;
+    font-weight: 300;
+
+}
+
+li a::before{
+    position: absolute;
+    content: '';
+    width: 0;
+    left: 0;
+    height: 5px;
+    top: 25px;
+    border-radius: 1rem;
+    transition: 0.3s ease-in-out;
+    background: linear-gradient(to right, rgb(0, 157, 255), rgb(255, 0, 255));
+}
+
+li a:hover::before{
+    width: 100%;
+
+}
+
+
+.visit-btn{
+    padding: 0.8rem 1.5rem;
+    border-radius: 3rem;
+    border: none;
+    font-weight: 500;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    text-wrap: nowrap;
+    transition: 0.3s ease-in-out;
+    background: linear-gradient(to right, rgb(0, 157, 255), rgb(255, 0, 255));
+
+}
+
+.visit-btn:hover{
+    background: linear-gradient(to right, rgb(255, 0, 255), rgb(0, 157, 255));
+    transform: scale(1.03);
+
+}
+
+#menu-icon{
+    font-size: 2rem;
+    display: none;
+
+}
+
+section{
+    min-height: 100vh;
+    padding: 8rem 12%;
+    width: 100%;
+    position: relative;
+
+}
+
+.about{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.about .about-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10rem;
+
+}
+
+.about img{
+    width: 30vw;
+    border-radius: 50%;
+
+}
+
+.info-box{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    color: white;
+
+}   
+
+.info-box h3{
+    font-size: 1.8rem;
+    font-weight: 500;
+    opacity: 0.8;
+
+}
+
+.info-box h1{
+    font-size: 4rem;
+    font-weight: 600;
+
+}
+
+.info-box span{
+    background: linear-gradient(to right, rgb(255, 0, 255), rgb(0, 157, 255));
+    background-clip: text;
+    color: transparent;
+    font-size: 2rem;
+
+}
+
+.btn-group{
+    display: flex;
+    gap: 1rem;
+
+}
+
+.btn{
+    border-radius: 3rem;
+    padding: 0.5rem 1.5rem;
+    border: 2px solid white;
+    cursor: pointer;
+    font-weight: 500;
+    text-wrap: nowrap;
+    transition: 0.2s ease-in-out;
+    backdrop-filter: blur(10px);
+
+
+}
+
+.btn:hover{
+    background-color: black;
+    color: white;
+    border: 2px solid black;
+
+}
+
+.socials{
+    display: flex;
+    gap: 2rem;
+
+}
+
+.socials i{
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+
+}
+
+.socials i:hover{
+    transform: scale(1.1);
+}
+
+
+
+
+.section-title{
+    text-align: center;
+    font-size: 4rem;
+    font-weight: 600;
+    margin-bottom: 3rem;
+    color: white;
+
+}
+
+.experience-info{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+    color: white;
+
+}
+
+.experience img{
+    width: 24vw;
+    border-radius: 3rem;
+
+
+}
+
+.grid{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 2rem;
+    
+
+}
+
+.grid-card{
+    border: 2px solid white;
+    border-radius: 3rem;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    justify-content: left;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    backdrop-filter: blur(4px);
+
+
+}
+
+.grid-card:hover{
+    transform: scale(1.02);
+    background-color: black;
+    color: white;
+    border: 2px solid black;
+
+}
+
+.grid-card i{
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+
+}
+
+.grid-card span{
+    font-size: 1.5rem;
+    font-weight: 500;
+    background: linear-gradient(to right, rgb(255, 0, 255), rgb(0, 157, 255));
+    background-clip: text;
+    color: transparent;
+
+
+}
+
+
+.education-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+    flex-wrap: wrap; 
+    color: white;
+}
+
+.education-image {
+    width: 30vw;
+    max-width: 400px; 
+    border-radius: 3rem;
+    object-fit: cover;
+}
+
+.education-card {
+    border: 2px solid white;
+    border-radius: 3rem;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    max-width: 500px; 
+    text-align: left;
+}
+
+.education-card:hover {
+    transform: scale(1.02);
+    background-color: black;
+    color: white;
+    border: black;
+}
+
+.education-card h3 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
+.education-card p {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    opacity: 0.8;
+}
+
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.skill-item {
+    border: 2px solid white;
+    border-radius: 1.5rem;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    backdrop-filter: blur(4px);
+
+}
+
+.skill-item:hover {
+    transform: scale(1.05);
+    background-color: black;
+    color: white;
+    border: black;
+
+}
+
+.skill-item i {
+    font-size: 3.5rem;
+    background: white;
+    background-clip: text;
+    color: transparent;
+}
+
+.skill-item:hover i {
+    background: linear-gradient(to right, rgb(0, 157, 255), rgb(255, 0, 255));
+    background-clip: text;
+}
+
+.skill-item span {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+
+::-webkit-scrollbar{
+    width: 20px;
+
+}
+
+::-webkit-scrollbar-track{
+    background-color: rgb(219, 219, 219);
+
+}
+
+::-webkit-scrollbar-thumb{
+    background: linear-gradient(to bottom, rgb(255, 0, 255), rgb(0, 157, 255));
+
+}
+
+
+.projects-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    gap: 2rem;
+
+}
+
+.project-card{
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 1.5rem;
+    border: 2px solid white;
+    border-radius: 3rem;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    backdrop-filter: blur(4px);
+    color: white;
+
+}
+
+.project-card:hover{
+    background-color: black;
+    color: white;
+    transform: translate(-10px)scale(1.02);
+    border: 2px solid black;
+
+
+}
+
+.project-card img{
+    width: 20vw;
+    border-radius: 1rem;
+
+}
+
+
+.project-card:hover .btn{
+    border: 2px solid white;
+    color: white;
+}
+
+.project-card:hover .btn:hover{
+    border: 2px solid white;
+    background-color: white;
+    color: black;
+}
+
+.project-card h3{
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+
+
+.contact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 3rem; 
+}
+
+.contact-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 900px;
+}
+
+.contact-item {
+    border: 2px solid white;
+    border-radius: 3rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    transition: 0.2s ease-in-out;
+    backdrop-filter: blur(4px);
+
+}
+
+.contact-item a {
+    color: white; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.contact-item:hover {
+    background-color: black;
+    color: white;
+    transform: scale(1.02);
+    border: 2px solid white;
+
+}
+
+.contact-item:hover a {
+    color: white;
+}
+
+.contact-item i {
+    font-size: 3rem;
+    background: white;
+    background-clip: text;
+    color: transparent;
+}
+
+.contact-item:hover i {
+    background: linear-gradient(to right, rgb(0, 157, 255), rgb(255, 0, 255));
+    background-clip: text;
+}
+
+.contact-item span {
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-wrap: nowrap;
+}
+
+.email-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 600px;
+
+}
+
+.email-form .input {
+    width: 100%;
+    position: relative;
+}
+
+.email-form input[type="email"],
+.email-form textarea {
+    width: 100%;
+    border-radius: 3rem;
+    border: 2px solid white;
+    padding: 1.5rem 2rem 1.5rem 5rem; 
+    font-size: 1.2rem;
+    outline: none;
+    resize: vertical; 
+    background-color: transparent;
+    backdrop-filter: blur(4px);
+    color: white;
+
+
+}
+
+.email-form textarea {
+    border-radius: 1.5rem;
+    padding: 1.5rem 2rem;
+    backdrop-filter: blur(4px);
+    background-color: transparent;
+}
+
+
+.email-form input::placeholder,
+.email-form textarea::placeholder {
+    font-size: 1.2rem;
+    opacity: 0.4;
+    color: white;
+}
+
+.email-form .input i {
+    position: absolute;
+    font-size: 1.8rem;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: white; 
+}
+
+.email-form .btn {
+    width: fit-content;
+    padding: 0.8rem 3rem;
+    font-size: 1.2rem;
+    background: linear-gradient(to right, rgb(0, 157, 255), rgb(255, 0, 255));
+    color: white;
+    border: none;
+}
+
+.email-form .btn:hover {
+    background: linear-gradient(to right, rgb(255, 0, 255), rgb(0, 157, 255));
+    color: white; 
+    transform: scale(1.05);
+}
+
+
+footer{
+    bottom: 0;
+    left: 0;
+    height: 10rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.footer-icon {
+    width: 26px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+footer ul{
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+
+}
+
+footer ul li a{
+    color: white;
+    font-weight: 600;
+
+}
+
+.copyright{
+    color: white;
+    opacity: 0.65;
+    font-size: 300;
+    margin-top: 2rem;
+
+}
+
+#preloader{
+    background: black url(loader.gif) no-repeat center center;
+    background-size: 15%;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    z-index: 99999;
+
+}
+
+
+
+
+
+/* === THEME SLIDER STYLES (Using Local Files) === */
+.theme-slider {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1001;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  cursor: pointer;
+}
+
+.theme-slider input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 34px;
+  transition: background-color 0.4s;
+}
+
+
+/* Thumb with the SUN icon */
+.slider-track:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.4s;
+  background-image: url('assets/sun.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px; /* ADD THIS LINE */
+}
+
+/* Checked state (Dark Mode) */
+input:checked + .slider-track {
+  background-color: #4c4c4c;
+}
+
+/* Thumb with the MOON icon */
+input:checked + .slider-track:before {
+  transform: translateX(26px);
+  background-image: url('moon.svg'); /* Path to local moon icon */
+}
+
+
+
+@media(max-width:1280px){
+
+    header{
+        padding: 1rem 2rem;
+        gap: 2rem;
+
+    }
+
+    .about .about-container{
+        gap: 3rem;
+    }
+
+    .experience-info{
+        flex-direction: column;
+
+    }
+
+    .education-container {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .education-image {
+        width: 70vw;
+        max-width: 500px;
+    }
+
+    .education-card {
+        max-width: 70vw;
+        padding: 2rem;
+    }
+
+    .input-box input{
+        padding: 2rem 5rem;
+        font-size: 2.5rem;
+
+    }
+
+    .input input::placeholder{
+        font-size: 2.5rem;
+
+    }
+
+    .input-box i{
+        font-size: 2.5rem;
+
+    }
+
+}
+
+
+@media(max-width:768px){
+    header{
+        gap: 1rem;
+        padding: 1rem 1rem;
+    }
+
+
+    header .logo{
+        font-size: 1rem;
+
+    }
+
+    header .visit-btn{
+        display: none;
+    }
+    .about-container{
+        flex-direction: column;
+
+    }
+    
+    .input-box input{ 
+        padding: 1rem;
+        font-size: 1.5rem;
+
+    }
+
+    .input-box input::placeholder{ 
+        font-size: 1.5rem;
+
+    }
+    .input-box i{ 
+        display: none;
+
+    }
+
+    .grid{
+        grid-template-columns: repeat(1,1fr);
+
+    }
+
+    .experience-info img{
+        width: 70vw;
+    }
+
+    .skill-item i {
+        font-size: 2.5rem;
+    }
+
+    .skill-item span {
+        font-size: 1rem;
+    }
+
+    .contact-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .email-form input[type="email"],
+    .email-form textarea {
+        font-size: 1rem;
+        padding: 1.2rem 1.5rem 1.2rem 4rem;
+    }
+
+    .email-form textarea {
+        padding: 1.2rem 1.5rem;
+    }
+
+    .email-form input::placeholder,
+    .email-form textarea::placeholder {
+        font-size: 1rem;
+    }
+
+    .email-form .input i {
+        font-size: 1.5rem;
+        left: 15px;
+    }
+}
+
+
+
+@media(max-width:600px){
+
+    header #menu-icon{
+        display:block;
+
+    }
+
+    .nav-links{
+        position: absolute;
+        top: 100%;
+        margin-top: 1rem;
+        width: 100%;
+        padding: 1rem;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        background: rgb(0, 0, 0, 0.9);
+        border-radius: 3rem;
+        display: none;
+
+    }
+
+    .nav-links li{
+        margin-top: 1.5rem;
+        padding: 1rem;
+
+    }
+
+    .nav-links.active{
+        display: block;
+
+    }
+
+    header{
+        padding: 1rem 5rem;
+        gap: 3rem;
+
+    }
+
+    header .logo{
+        font-size: 1rem;
+
+    }
+
+    .about-container img{
+        width: 80vw;
+    }
+
+    .input-box input{
+        padding: 0.5rem 3rem;
+        width: 80%;
+        font-size: 1.5rem;
+
+    }
+
+    .input-box input::placeholder{
+        font-size: 1.5rem;
+
+    }
+
+    footer ul{
+        padding: 1rem;
+        gap: 1.5rem;
+
+
+    }
+
+}
