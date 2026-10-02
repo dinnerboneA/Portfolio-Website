@@ -1,216 +1,859 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-    <link rel="icon" type="image/jpg" href="favicon.jpg"> 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protfolio Website</title>
-    
-    <script>
-        (function() {
-            const theme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/jpg" href="favicon.jpg">
+<title>Ahmed Bin Faisal</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/motion@12.10.0/dist/motion.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+/* ===== DESIGN VARIABLES ===== */
+:root{
+  --primary:#ef4444;
+  --secondary:#dc2626;
+  --accent:#f97316;
+  --amber:#f59e0b;
+  --emerald:#10b981;
+  --radius:0.75rem;
+  --radius-lg:1.25rem;
+  --radius-full:9999px;
+}
+.dark{
+  --bg:#050510;
+  --bg2:#0a0a1a;
+  --bg3:#111128;
+  --bg4:#1a1a3a;
+  --text:#e2e8f0;
+  --text2:#94a3b8;
+  --text3:#64748b;
+  --card:rgba(15,15,40,0.95);
+  --card-border:rgba(239,68,68,0.15);
+  --glow:0 0 30px rgba(239,68,68,0.1);
+}
+.light{
+  --bg:#f1f5f9;
+  --bg2:#fff;
+  --bg3:#e2e8f0;
+  --bg4:#cbd5e1;
+  --text:#0f172a;
+  --text2:#475569;
+  --text3:#94a3b8;
+  --card:rgba(255,255,255,0.92);
+  --card-border:rgba(239,68,68,0.2);
+  --glow:0 0 30px rgba(239,68,68,0.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:Inter,system-ui,sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;transition:background .5s,color .5s}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--primary),var(--accent));border-radius:10px}
 
-            if (theme === 'light' || (!theme && !prefersDark)) {
-                document.head.insertAdjacentHTML(
-                    'beforeend',
-                    `<style>
-                        #preloader { background: #6DA5B2 url(loader.gif) no-repeat center center; background-size: 15%; }
-                        #background-container { background-image: url('Background-light.png'); }
-                    </style>`
-                );
-            }
-        })();
-    </script>
-    
-    <link id="theme-style" rel="stylesheet" href="dark-style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+/* ===== PARALLAX BACKGROUND ===== */
+#bg-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-2;display:block}
+.dark #bg-canvas{background:#000}
+.light #bg-canvas{background:#f1f5f9}
+
+/* ===== NAVBAR ===== */
+nav{
+  position:fixed;top:1rem;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:1.5rem;padding:.55rem 1.8rem;
+  border-radius:3rem;background:rgba(10,10,30,.88);
+  border:1px solid rgba(239,68,68,.15);backdrop-filter:blur(20px);
+  z-index:1000;transition:all .4s
+}
+.light nav{background:rgba(255,255,255,.88);border-color:rgba(239,68,68,.2)}
+nav.scrolled{box-shadow:0 4px 30px rgba(239,68,68,.12);border-color:rgba(239,68,68,.25)}
+.nav-links{display:flex;gap:1.2rem;list-style:none}
+.nav-links a{color:var(--text2);font-size:.8rem;font-weight:500;text-decoration:none;position:relative;transition:color .3s}
+.nav-links a::after{content:"";position:absolute;bottom:-4px;left:0;width:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .3s;border-radius:1px}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.logo-btn{font-size:1rem;font-weight:700;text-decoration:none;font-family:monospace;color:var(--text)}
+.theme-btn{background:none;border:none;color:var(--text2);font-size:1.1rem;transition:color .3s}
+.theme-btn:hover{color:var(--primary)}
+
+/* ===== SECTIONS ===== */
+section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
+.ct{max-width:1280px;margin:0 auto}
+.section-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;color:var(--primary);text-align:center;margin-bottom:.5rem;font-weight:600}
+.section-title{font-size:2.4rem;font-weight:800;text-align:center;margin-bottom:2.5rem;color:var(--text)}
+
+/* ===== HERO ===== */
+#hero{display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;overflow:hidden}
+#hero .hc{z-index:1}
+#hero .greeting{font-size:1rem;color:var(--primary);font-weight:500;margin-bottom:.3rem}
+#hero h1{font-size:clamp(2.2rem,6vw,5rem);font-weight:900;line-height:1.05;margin-bottom:.5rem;background:linear-gradient(135deg,var(--primary),var(--accent),var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#hero .subtitle{font-size:clamp(1rem,2.5vw,1.4rem);color:var(--text2);margin-bottom:2rem;min-height:2em}
+.hero-stats{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;margin-top:3rem}
+.hero-stat{text-align:center}
+.hero-stat .num{font-size:2.2rem;font-weight:800;color:var(--primary);font-family:monospace}
+.hero-stat .lbl{font-size:.8rem;color:var(--text3);margin-top:.2rem}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem}
+
+/* ===== BUTTONS ===== */
+.btn{padding:.7rem 1.8rem;border-radius:3rem;font-size:.9rem;font-weight:600;border:none;text-decoration:none;transition:all .35s;display:inline-flex;align-items:center;gap:.5rem}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;box-shadow:0 4px 20px rgba(239,68,68,.25)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(239,68,68,.35)}
+.btn-outline{border:2px solid var(--card-border);color:var(--text);background:transparent}
+.light .btn-outline{background:rgba(255,255,255,0.7)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-3px)}
+
+/* ===== GLASS CARD ===== */
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;transition:all .35s;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:-100%;width:200%;height:1px;background:linear-gradient(90deg,transparent,var(--primary),var(--accent),transparent);transition:left 1s}
+.card:hover::before{left:100%}
+.card:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 12px 40px rgba(239,68,68,.08)}
+
+/* ===== TIMELINE ===== */
+.tl{position:relative;padding-left:1.5rem;max-width:700px;margin:0 auto}
+.tl::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--primary),var(--accent))}
+.tl-item{position:relative;margin-bottom:1.5rem;padding-left:1.5rem}
+.tl-item::before{content:"";position:absolute;left:-6px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--primary);border:3px solid var(--bg)}
+.tl-item .d{font-size:.8rem;color:var(--primary);font-weight:600}
+.tl-item .t{font-size:1.05rem;font-weight:700;color:var(--text)}
+.tl-item .c{font-size:.85rem;color:var(--text2)}
+.tl-item ul{list-style:none;margin-top:.3rem}
+.tl-item ul li{font-size:.85rem;color:var(--text2);padding:.15rem 0 .15rem 1rem;position:relative}
+.tl-item ul li::before{content:"▸";position:absolute;left:0;color:var(--primary)}
+
+/* ===== GRID LAYOUTS ===== */
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem}
+.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.grid4{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+
+/* ===== PROJECT CARD ===== */
+.pc{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.3rem;transition:all .35s}
+.pc:hover{transform:translateY(-6px);border-color:var(--primary);box-shadow:0 12px 40px rgba(239,68,68,.1)}
+.pc .pi{font-size:1.5rem;margin-bottom:.4rem}
+.pc h3{font-size:1rem;font-weight:700;margin-bottom:.3rem;color:var(--text)}
+.pc .pt{display:flex;flex-wrap:wrap;gap:.25rem;margin-bottom:.5rem}
+.pc .pt span{padding:.12rem .45rem;font-size:.7rem;border-radius:.5rem;background:var(--bg3);color:var(--primary);font-family:monospace;font-weight:500}
+.pc .pd{font-size:.82rem;color:var(--text2);line-height:1.5;margin-bottom:.6rem}
+.pc .pl a{font-size:.8rem;color:var(--primary);text-decoration:none;font-weight:600}
+
+/* ===== SKILL TAG ===== */
+.sk-tag{padding:.25rem .7rem;font-size:.75rem;border-radius:2rem;background:var(--bg3);color:var(--text2);border:1px solid var(--card-border);transition:all .25s;font-weight:500;margin:2px;display:inline-block;white-space:nowrap}
+.sk-tag:hover{background:var(--primary);color:#fff;border-color:var(--primary);transform:translateY(-2px)}
+
+/* ===== ACHIEVEMENT ===== */
+.ach-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1rem;display:flex;gap:.6rem;align-items:flex-start;transition:all .3s}
+.ach-card:hover{border-color:var(--primary);transform:translateY(-3px)}
+.ach-card .ach-icon{font-size:1.2rem;flex-shrink:0;margin-top:.1rem}
+.ach-card p{font-size:.82rem;color:var(--text2);line-height:1.5}
+
+/* ===== CONTACT ===== */
+.contact-item{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1rem;display:flex;align-items:center;gap:.8rem;text-decoration:none;color:var(--text);transition:all .3s}
+.contact-item:hover{border-color:var(--primary);transform:translateY(-3px)}
+.contact-item i{font-size:1.3rem;color:var(--primary)}
+.contact-item span{font-size:.84rem;color:var(--text2)}
+
+/* ===== PRELOADER ===== */
+#pl{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:99999;display:flex;align-items:center;justify-content:center;transition:opacity .6s,visibility .6s}
+#pl.h{opacity:0;visibility:hidden;pointer-events:none}
+
+/* ===== BAT ===== */
+#bat{position:fixed;z-index:9998;pointer-events:none;opacity:0;transition:opacity .8s}
+#bat img{width:90px}
+</style>
 </head>
 <body>
+<canvas id="bg-canvas"></canvas>
+<div id="pl"><img src="loader.gif" width="100"></div>
+<div id="bat"><img id="bat-img" src=""></div>
 
-    <div id="background-container"></div>
+<nav id="nav">
+  <a href="#" class="logo-btn">&lt;<span id="logo-text">ABF</span>/&gt;</a>
+  <ul class="nav-links">
+    <li><a href="#hero" class="active">Home</a></li>
+    <li><a href="#exp">Exp</a></li>
+    <li><a href="#proj">Projects</a></li>
+    <li><a href="#sk">Skills</a></li>
+    <li><a href="#ach">Achieve</a></li>
+    <li><a href="#ct">Contact</a></li>
+  </ul>
+  <button class="theme-btn" id="tt"><i class="fa-solid fa-moon" id="ti"></i></button>
+</nav>
 
-    <div id="preloader"></div>
-
-    <label class="theme-slider" for="theme-toggle">
-        <input type="checkbox" id="theme-toggle">
-        <span class="slider-track"></span>
-    </label>
-    
-    <div id="bat-container">
-        <img id="bat-image" src="" alt="Flying bat animation">
+<section id="hero">
+  <div class="hc">
+    <p class="greeting">Hello, I'm</p>
+    <h1 id="hn">Ahmed Bin Faisal</h1>
+    <p class="subtitle" id="sub"></p>
+    <div class="hero-btns">
+      <a href="#proj" class="btn btn-primary"><i class="fa-solid fa-code"></i> View Work</a>
+      <a href="#ct" class="btn btn-outline"><i class="fa-solid fa-paper-plane"></i> Contact</a>
     </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">13+</div><div class="lbl">Projects</div></div>
+      <div class="hero-stat"><div class="num">5</div><div class="lbl">Months XP</div></div>
+      <div class="hero-stat"><div class="num">10+</div><div class="lbl">Technologies</div></div>
+    </div>
+  </div>
+</section>
 
-    <header class="header">
-        <a href="#" class="logo"><span>Ahmed Bin Faisal</span></a>
-        <ul class="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#education">Education</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contacts</a></li>
-        </ul>
-        <i class="fa-solid fa-bars" id="menu-icon"></i>
-        <button class="visit-btn">Visit Github</button>
-    </header>
+<section id="exp">
+  <div class="ct">
+    <p class="section-label">Professional Background</p>
+    <h2 class="section-title">Experience</h2>
+    <div class="tl">
+      <div class="tl-item"><div class="d">Oct 2025 - Feb 2026</div><div class="t">AI Software Engineer Intern</div><div class="c">TalentScreenAI, Kuala Lumpur</div><ul><li>Built a cross-platform profile import feature for LinkedIn &amp; Indeed migration in one click</li><li>Designed a universal scraper to extract structured profile data from external job platforms</li><li>Developed full-stack features using Laravel, React Inertia, and MySQL; built REST APIs</li><li>Proposed product ideas adopted during early-stage startup; collaborated in Agile sprints</li></ul></div>
+    </div>
+  </div>
+</section>
 
-    <section id="about" class="about">
-        <div class="about-container">
-            <img src="ProfilePicture.png" alt="Ahmed Bin Faisal Profile Picture">
-            <div class="info-box">
-                <div class="text">
-                    <h3> Hi, I'm</h3>
-                    <h1>Ahmed Bin Faisal</h1>
-                    <span>AI Developer</span>
-                </div>
-                <div class="btn-group">
-                    <div class="btn" id="download-cv-btn">Download CV</div>
-                    <div class="btn" id="contact-me-btn">Contact</div>
-                </div>
-                <div class="socials">
-                    <i class="fa-brands fa-github" id="github-social"></i>
-                    <i class="fa-brands fa-linkedin" id="linkedin-social"></i>
-                </div>
-            </div>
-        </div>
-    </section>
+<section id="proj">
+  <div class="ct">
+    <p class="section-label">What I've Built</p>
+    <h2 class="section-title">Projects</h2>
+    <div class="grid2">
+      <div class="pc"><div class="pi">🧵</div><h3>Twinin.AI - Virtual Try-On</h3><div class="pt"><span>FastAPI</span><span>React</span><span>ComfyUI</span><span>ControlNet</span><span>IP-Adapter</span></div><p class="pd">3-tier GenAI system running latent diffusion locally for fabric draping and lighting simulation. Async FIFO GPU queue with WebSocket sync prevents OOM crashes on constrained VRAM.</p><div class="pl"><a href="https://github.com/dinnerboneA/Twinin.AI-Virtual-Try-On-FYP" target="_blank">GitHub →</a></div></div>
+      <div class="pc"><div class="pi">⚡</div><h3>Real-Time Data Pipeline</h3><div class="pt"><span>Rust</span><span>Tokio</span><span>Criterion.rs</span><span>SSE</span><span>IPC</span></div><p class="pd">High-velocity SSE ingestion pipeline with zero-copy memory management, stack allocation, and priority-aware MPSC channels for backpressure handling.</p><div class="pl"><a href="https://github.com/dinnerboneA" target="_blank">GitHub →</a></div></div>
+      <div class="pc"><div class="pi">☁️</div><h3>Cloud Microservices Architecture</h3><div class="pt"><span>AWS Lambda</span><span>API Gateway</span><span>SNS</span><span>S3</span><span>X-Ray</span></div><p class="pd">Refactored legacy monolith into serverless AWS microservices. Event-driven flows, presigned S3 uploads, and distributed tracing via X-Ray and CloudWatch.</p><div class="pl"><a href="https://github.com/dinnerboneA" target="_blank">GitHub →</a></div></div>
+      <div class="pc"><div class="pi">📷</div><h3>License Plate Recognition</h3><div class="pt"><span>Python</span><span>OpenCV</span><span>EasyOCR</span><span>CustomTkinter</span></div><p class="pd">End-to-end LPR using classical CV (CLAHE, morphology, contours). Deterministic prefix-lookup for multi-line state classification. Concurrent GUI with daemon threading.</p><div class="pl"><a href="https://github.com/dinnerboneA" target="_blank">GitHub →</a></div></div>
+      <div class="pc"><div class="pi">🔐</div><h3>Distributed HRM System</h3><div class="pt"><span>Java RMI</span><span>SSL/TLS</span><span>MySQL</span><span>Multithreading</span></div><p class="pd">Secure client-server architecture with TLS encryption and multithreaded concurrency. Evaluated enterprise middleware technologies.</p><div class="pl"><a href="https://github.com/dinnerboneA/HR-Management-System-RMI" target="_blank">GitHub →</a></div></div>
+      <div class="pc"><div class="pi">🔍</div><h3>Algorithmic Recommendation Engine</h3><div class="pt"><span>Heaps</span><span>Inverted Indexes</span><span>Big-O</span><span>Optimization</span></div><p class="pd">Real-time book recommendation architecture with hybrid data structures for sub-linear search. Heuristic collaborative filtering with off-peak caching strategies.</p><div class="pl"><a href="https://github.com/dinnerboneA" target="_blank">GitHub →</a></div></div>
+      <div class="pc"><div class="pi">🎨</div><h3>UX Research &amp; Prototyping</h3><div class="pt"><span>Figma</span><span>HTA</span><span>DECIDE</span><span>WCAG</span><span>Fitts' Law</span></div><p class="pd">End-to-end UX for a mobile navigation app: parallel wireframes to hi-fi Figma prototype. User research via HTA, persona development, and heuristic expert reviews.</p><div class="pl"><a href="https://github.com/dinnerboneA" target="_blank">GitHub →</a></div></div>
+      <div class="pc"><div class="pi">🛡️</div><h3>Tech Strategy &amp; Risk Analysis</h3><div class="pt"><span>XDR</span><span>NIST AI RMF</span><span>EU AI Act</span><span>IP Strategy</span></div><p class="pd">Evaluated enterprise cybersecurity platforms and AI behavioral analytics. Mapped compliance against EU AI Act, NIST AI RMF, and SEC disclosure rules.</p><div class="pl"><a href="https://github.com/dinnerboneA" target="_blank">GitHub →</a></div></div>
+    </div>
+  </div>
+</section>
 
-    <section id="education" class="education">
-        <h2 class="section-title">Education</h2>
-        <div class="education-container">
-            <img src="University.png" alt="University Building" class="education-image">
-            <div class="education-card grid-card">
-                <i class="fa-solid fa-graduation-cap"></i>
-                <span>Bachelor's Degree</span>
-                <h3>Computer Science</h3>
-                <p>Asia Pacific University of Technology & Innovation, Kuala Lumpur, Malaysia</p>
-                <p>2023 - 2026</p>
-            </div>
-        </div>
-    </section>
+<section id="sk">
+  <div class="ct">
+    <p class="section-label">What I Bring</p>
+    <h2 class="section-title">Skills</h2>
+    <div class="grid4">
+      <div class="card"><h4 style="color:var(--primary);margin-bottom:.6rem;font-size:.9rem">Languages</h4><div class="pt"><span class="sk-tag">Python</span><span class="sk-tag">Rust</span><span class="sk-tag">Java</span><span class="sk-tag">C++</span><span class="sk-tag">C#</span><span class="sk-tag">TypeScript</span><span class="sk-tag">JS</span><span class="sk-tag">PHP/Laravel</span><span class="sk-tag">SQL</span><span class="sk-tag">Assembly</span></div></div>
+      <div class="card"><h4 style="color:var(--primary);margin-bottom:.6rem;font-size:.9rem">AI &amp; ML</h4><div class="pt"><span class="sk-tag">GenAI</span><span class="sk-tag">Latent Diffusion</span><span class="sk-tag">OpenCV</span><span class="sk-tag">NLP</span><span class="sk-tag">LLM Fine-tuning</span><span class="sk-tag">ControlNet</span><span class="sk-tag">IP-Adapter</span><span class="sk-tag">EasyOCR</span></div></div>
+      <div class="card"><h4 style="color:var(--primary);margin-bottom:.6rem;font-size:.9rem">Cloud &amp; Infra</h4><div class="pt"><span class="sk-tag">AWS Lambda</span><span class="sk-tag">S3</span><span class="sk-tag">API Gateway</span><span class="sk-tag">SNS</span><span class="sk-tag">CloudWatch</span><span class="sk-tag">X-Ray</span><span class="sk-tag">EC2</span><span class="sk-tag">FastAPI</span><span class="sk-tag">Docker</span></div></div>
+      <div class="card"><h4 style="color:var(--primary);margin-bottom:.6rem;font-size:.9rem">Systems</h4><div class="pt"><span class="sk-tag">Real-Time</span><span class="sk-tag">Multithreading</span><span class="sk-tag">IPC</span><span class="sk-tag">TCP/IP</span><span class="sk-tag">TLS</span><span class="sk-tag">Zero-copy</span><span class="sk-tag">Memory Mgmt</span><span class="sk-tag">Backpressure</span></div></div>
+      <div class="card"><h4 style="color:var(--primary);margin-bottom:.6rem;font-size:.9rem">Web &amp; Full-Stack</h4><div class="pt"><span class="sk-tag">React</span><span class="sk-tag">Tailwind</span><span class="sk-tag">WebSockets</span><span class="sk-tag">REST APIs</span><span class="sk-tag">Chrome Ext</span><span class="sk-tag">Git</span><span class="sk-tag">Agile</span><span class="sk-tag">Figma</span></div></div>
+      <div class="card"><h4 style="color:var(--primary);margin-bottom:.6rem;font-size:.9rem">Design &amp; Research</h4><div class="pt"><span class="sk-tag">UX</span><span class="sk-tag">Wireframing</span><span class="sk-tag">Prototyping</span><span class="sk-tag">Usability Testing</span><span class="sk-tag">HTA</span><span class="sk-tag">DECIDE</span><span class="sk-tag">WCAG</span></div></div>
+      <div class="card"><h4 style="color:var(--primary);margin-bottom:.6rem;font-size:.9rem">Project Mgmt</h4><div class="pt"><span class="sk-tag">WBS</span><span class="sk-tag">RACI</span><span class="sk-tag">Resource Histograms</span><span class="sk-tag">Risk Mitigation</span><span class="sk-tag">Agile/Waterfall</span><span class="sk-tag">SDLC</span></div></div>
+      <div class="card"><h4 style="color:var(--primary);margin-bottom:.6rem;font-size:.9rem">Compliance</h4><div class="pt"><span class="sk-tag">EU AI Act</span><span class="sk-tag">NIST AI RMF</span><span class="sk-tag">SEC Disclosures</span><span class="sk-tag">IP Strategy</span><span class="sk-tag">XDR</span><span class="sk-tag">Adversarial ML</span></div></div>
+    </div>
+  </div>
+</section>
 
-    <section id="skills" class="skills">
-        <h2 class="section-title">Skills</h2>
-        <div class="skills-grid">
-            <div class="skill-item"><i class="fa-brands fa-python"></i><span>Python</span></div>
-            <div class="skill-item"><i class="fa-solid fa-c"></i><span>C</span></div>
-            <div class="skill-item"><i class="fa-solid fa-plus"></i><span>C++</span></div>
-            <div class="skill-item"><i class="fa-solid fa-hashtag"></i><span>C#</span></div>
-            <div class="skill-item"><i class="fa-brands fa-java"></i><span>Java</span></div>
-            <div class="skill-item"><i class="fa-solid fa-puzzle-piece"></i><span>TASM</span></div>
-            <div class="skill-item"><i class="fa-solid fa-database"></i><span>MySQL</span></div>
-            <div class="skill-item"><i class="fa-solid fa-user-gear"></i><span>NLP</span></div>
-            <div class="skill-item"><i class="fa-solid fa-cloud-arrow-up"></i><span>REST APIs</span></div>
-            <div class="skill-item"><i class="fa-solid fa-laptop-code"></i><span>ML</span></div>
-            <div class="skill-item"><i class="fa-solid fa-microchip"></i><span>AI Development</span></div>
-            <div class="skill-item"><i class="fa-brands fa-js"></i><span>JavaScript</span></div>
-            <div class="skill-item"><i class="fa-brands fa-html5"></i><span>HTML5</span></div>
-            <div class="skill-item"><i class="fa-solid fa-arrows-spin"></i><span>SDLC</span></div>
-            <div class="skill-item"><i class="fa-solid fa-network-wired"></i><span>Networking</span></div>
-            <div class="skill-item"><i class="fa-solid fa-chart-line"></i><span>Data Analysis</span></div>
-        </div>
-    </section>
+<section id="ach">
+  <div class="ct">
+    <p class="section-label">Beyond Code</p>
+    <h2 class="section-title">Achievements</h2>
+    <div class="grid3">
+      <div class="ach-card"><span class="ach-icon">🏆</span><p><strong>Led 16-member fundraising</strong> for an orphanage: RM200 to RM900+ profit in 3 days. Served as Research Manager and Accountant.</p></div>
+      <div class="ach-card"><span class="ach-icon">🎤</span><p><strong>Best Delegate</strong> at two consecutive MUN conferences. Debated global policy in committees of 100+ international participants.</p></div>
+      <div class="ach-card"><span class="ach-icon">🤝</span><p><strong>Organized "Future of Tech Hiring"</strong> talk with a senior SEEK Asia representative, coordinating a team of 10 students.</p></div>
+      <div class="ach-card"><span class="ach-icon">🎓</span><p><strong>Top 5% in AI and Networking</strong> modules. Led 3 cross-functional teams to deliver A-graded projects on time.</p></div>
+      <div class="ach-card"><span class="ach-icon">🌐</span><p><strong>UN SDG 7.3 campaign</strong>: organized an online education campaign and live webinar on energy efficiency using WBS, RACI, and resource planning.</p></div>
+      <div class="ach-card"><span class="ach-icon">🧠</span><p><strong>Built neural networks from scratch</strong> to deeply understand backpropagation, gradient descent, and architectures without frameworks.</p></div>
+    </div>
+    <div class="card" style="max-width:500px;margin:3rem auto 0;text-align:center">
+      <i class="fa-solid fa-graduation-cap" style="font-size:2rem;color:var(--primary);margin-bottom:.5rem"></i>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:.2rem;color:var(--text)">BSc Computer Science</h3>
+      <p style="font-size:.84rem;color:var(--text2)">Asia Pacific University of Technology & Innovation (APU), Malaysia</p>
+      <p style="font-size:.8rem;color:var(--primary);font-weight:600">2023 - 2026</p>
+      <p style="font-size:.78rem;color:var(--text3);margin-top:.3rem">IBM AI Fundamentals · Red Hat RH124 · Cisco CCNA (in progress)</p>
+    </div>
+  </div>
+</section>
 
-    <section id="experience" class="experience">
-        <h2 class="section-title">Experience</h2>
-        <div class="experience-info">
-            <div class="grid">
-                <div class="grid-card">
-                    <i class="fa-solid fa-code"></i><span>AI Developer</span><h3>2 years</h3><p>Developed NattyAI chatbot, integrating REST APIs to deliver personalized fitness guidance in real time.</p>
-                </div>
-                <div class="grid-card">
-                    <i class="fa-solid fa-file-code"></i><span>Software Development</span><h3>2 years</h3><p>Built and deployed a Python-based game and many other projects demonstrating core programming, problem-solving, and interactive design.</p>
-                </div>
-                <div class="grid-card">
-                    <i class="fa-solid fa-laptop"></i><span>Web Development</span><h3>1 years</h3><p>Designed and launched a personal portfolio website (abfportfolio.vercel.app) using HTML, CSS, and JavaScript to showcase projects and skills.</p>
-                </div>
-                <div class="grid-card">
-                    <i class="fa-solid fa-list"></i><span>UI designer</span><h3>2 years</h3><p>Created Wardrobe.AI interface to showcase AI-driven fashion recommendations through a user-friendly design prototype.</p>
-                </div>
-            </div>
-            <img src="ProfilePicture2.png" alt="Ahmed Bin Faisal Profile Picture 2">
-        </div>
-    </section>
+<section id="ct">
+  <div class="ct">
+    <p class="section-label">Let's Talk</p>
+    <h2 class="section-title">Contact</h2>
+    <div class="grid2" style="max-width:900px;margin:0 auto">
+      <a href="mailto:ahmedfaisal1255@gmail.com" class="contact-item"><i class="fa-solid fa-envelope"></i><span>ahmedfaisal1255@gmail.com</span></a>
+      <a href="tel:+60163172767" class="contact-item"><i class="fa-solid fa-phone"></i><span>+60 16-317 2767</span></a>
+      <a href="https://linkedin.com/in/ahmedbinfaisal" target="_blank" class="contact-item"><i class="fa-brands fa-linkedin"></i><span>linkedin.com/in/ahmedbinfaisal</span></a>
+      <a href="https://github.com/dinnerboneA" target="_blank" class="contact-item"><i class="fa-brands fa-github"></i><span>github.com/dinnerboneA</span></a>
+    </div>
+    <p style="text-align:center;margin-top:2rem"><a href="#" class="btn btn-primary" id="dcv"><i class="fa-solid fa-download"></i> Download CV</a></p>
+  </div>
+</section>
 
-    <section id="projects" class="projects">
-        <h2 class="section-title">Recent Projects</h2>
-        <div class="projects-grid">
-            <div class="project-card">
-                <img src="RecentProject1.png" alt="PyGame Loser Project"><h3>PyGame "loser"</h3><p>A Python-based game showcasing logic design, scoring system, and event handling.</p>
-                <div class="btn-group">
-                    <div class="btn">Live Demo</div><div class="btn" id="repo-btn-1">GitHub Repo</div>
-                </div>
-            </div>
-            <div class="project-card">
-                <img src="RecentProject2.png" alt="NattyAI ChatBot Project"><h3>NattyAI ChatBot</h3><p>A fitness-oriented healthcare chatbot built with Python and REST APIs to recommend exercises and workouts.</p>
-                <div class="btn-group">
-                    <div class="btn">Live Demo</div><div class="btn" id="repo-btn-2">GitHub Repo</div>
-                </div>
-            </div>
-            <div class="project-card">
-                <img src="RecentProject3.png" alt="Wardrobe.AI UI Design Project"><h3>Wardrobe.AI UI design</h3><p>A clothing recommendation concept using AI and computer vision, presented with a clean, user-friendly UI.</p>
-                <div class="btn-group">
-                    <div class="btn">Live Demo</div><div class="btn" id="repo-btn-3">GitHub Repo</div>
-                </div>
-            </div>
-        </div>
-    </section>
+<footer style="text-align:center;padding:2rem;border-top:1px solid var(--card-border);color:var(--text3);font-size:.8rem">
+  © 2026 Ahmed Bin Faisal
+</footer>
 
-    <section class="contact" id="contact">
-        <h2 class="section-title">Contact Me</h2>
-        <div class="contact-info-grid">
-            <div class="contact-item"><a href="mailto:Ahmedfaisal1255@gmail.com" target="_blank"><i class="fa-solid fa-envelope"></i><span>Ahmedfaisal1255@gmail.com</span></a></div>
-            <div class="contact-item"><a href="tel:+60163172767"><i class="fa-solid fa-phone"></i><span>+60 163 172 767</span></a></div>
-            <div class="contact-item"><a href="https://www.linkedin.com/in/ahmed-bin-faisal-3025972a1/" target="_blank"><i class="fa-brands fa-linkedin"></i><span>Ahmed Bin Faisal</span></a></div>
-        </div>
-        <form class="email-form" id="contactForm">
-            <div class="input">
-                <input type="email" name="email" placeholder="example@email.com" required><i class="fa-solid fa-envelope"></i>
-            </div>
-            <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
-            <button type="submit" class="btn">Submit</button>
-        </form>
-    </section>
+<script>
+// ===== IDLE TIMER & DEVOUR STATE =====
+var lastActivity=Date.now();
+// devourPhase: 0=idle, 1=zoom/grow, 2=shake, 3=consume
+var devourPhase=0,devourProgress=0,devouring=false,zoomFactor=1;
+var retreating=false,rtPhase=0;
 
-    <footer>
-        <ul>
-            <li><a href="#about">About</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#education">Education</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-        <p class="copyright">
-            <img src="favicon.jpg" alt="Logo" class="footer-icon"> © ALL Rights Reserved | Ahmed Bin Faisal
-        </p>
-    </footer>
+// PHASES (as fraction of devourProgress):
+// 0.0-0.35: Phase 1 — Black hole grows bigger (zoom only, no content damage)
+// 0.35-0.60: Phase 2 — Screen shaking begins, content gets blurry
+// 0.60-1.0:  Phase 3 — Content breaks apart and falls toward event horizon
 
-    <script>
-        document.querySelector('.visit-btn').onclick = () => window.open('https://github.com/dinnerboneA', '_blank');
-        document.querySelector('#github-social').onclick  = () => window.open('https://github.com/dinnerboneA', '_blank');
-        document.querySelector('#linkedin-social').onclick = () => window.open('https://www.linkedin.com/in/ahmed-bin-faisal-3025972a1/', '_blank');
-        document.querySelector('#download-cv-btn').onclick = () => {
-            const link = document.createElement('a');
-            link.href = 'ABF CV.pdf';         
-            link.download = 'Ahmed_Bin_Faisal_CV.pdf';
-            link.click();
-        };
-        document.querySelector('#contact-me-btn').onclick = () => {
-            document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
-        };
-        document.querySelector('#repo-btn-1').onclick = () => window.open('https://github.com/dinnerboneA/PythonGameLoser', '_blank'); 
-        document.querySelector('#repo-btn-2').onclick = () => window.open('https://cdn.botpress.cloud/webchat/v2/shareable.html?botId=1da4f33a-d062-40aa-b784-becf49e71b0c', '_blank'); 
-        document.querySelector('#repo-btn-3').onclick = () => window.open('https://github.com/dinnerboneA/WardrobeAIDesign', '_blank');
-    </script>
-    <script>
-        var loader = document.getElementById("preloader");
-        window.addEventListener("load", function(){
-            loader.style.display="none";
-        })
-    </script>
-    <script src="script.js"></script>
-    <script src="theme-switcher.js"></script>
+
+
+// ===== IDLE TIMER & DEVOUR STATE =====
+var DASHE_SPEEDS = [];
+for(var ds=0;ds<60;ds++) DASHE_SPEEDS.push(0.002+Math.random()*0.025);
+
+// ===== DOM CONTENT BREAKUP =====
+function applyDevourEffect(){
+  var els=document.querySelectorAll("nav,.section-title,.section-label,.pc,.card,.ach-card,.tl-item,.contact-item,.btn,footer,.hero-stats,.hero-btns");
+  for(var i=0;i<els.length;i++){
+    var el=els[i];
+    if(devourProgress>0&&devourProgress<0.9){
+      var rect=el.getBoundingClientRect();
+      var ctrX=rect.left+rect.width/2,ctrY=rect.top+rect.height/2;
+      var dx=ctrX-W/2,dy=ctrY-H/2;
+      var dist=Math.sqrt(dx*dx+dy*dy);
+      var pull=devourProgress*1.5;
+      // Stretch toward center, fade
+      var sx=1-Math.min(pull*0.8,0.95);
+      var fy=1-Math.min(pull*0.3,0.7);
+      var fx=1+Math.min(pull*0.5,1.5);
+      var rot=(Math.random()-0.5)*pull*15;
+      var alpha=dist<EH*2?0:Math.max(0,1-pull);
+      el.style.opacity=alpha;
+      el.style.transform="scale("+(sx)+","+(fx)+") rotate("+rot+"deg) translate("+(-dx*pull*0.4-Math.random()*pull*20)+"px,"+(-dy*pull*0.4-Math.random()*pull*20)+"px)";
+      el.style.filter="blur("+(pull*3)+"px)";
+    }else if(devourProgress>=0.9){
+      el.style.opacity="0";
+      el.style.transform="scale(0.01)";
+    }
+  }
+}
+
+// ===== BLACK HOLE CANVAS — Full v2 =====
+(function(){
+  var cvs=document.getElementById("bg-canvas");
+  if(!cvs||typeof cvs.getContext!=="function"){document.body.style.background="#000";return}
+  var ctx=cvs.getContext("2d");
+  if(!ctx){return}
+  window._bhW=window.innerWidth;window._bhH=window.innerHeight;
+  function rs(){window._bhW=cvs.width=window.innerWidth;window._bhH=cvs.height=window.innerHeight}
+  rs();window.addEventListener("resize",rs);
+  var W=window._bhW,H=window._bhH,time=0,targetMx=0,targetMy=0,velX=0,velY=0,smx=0,smy=0;
+  rs();window.addEventListener("resize",rs);
+
+  var CX=W/2,CY=H/2,EH=Math.min(W,H)*0.18;window._bhEH=EH;
+  var STARS=200,PARTICLES=450,DASHES=60;
+
+  // === Star field ===
+  var stars=[];
+  function initStars(){
+    stars=[];CX=W/2;CY=H/2;EH=Math.min(W,H)*0.18;window._bhEH=EH;
+    for(var i=0;i<STARS;i++){
+      var a=Math.random()*Math.PI*2;
+      var d=EH*1.5+Math.random()*(Math.max(W,H)*0.65);
+      
+      stars.push({
+        a: a, 
+        d: d, 
+        speed: 0.00005 + Math.random() * 0.00025, // Unique, very slow speed per star
+        r: .3+Math.random()*1.2, 
+        b: .2+Math.random()*.8
+      });
+    }
+  }
+  initStars();window.addEventListener("resize",initStars);
+
+  // === Accretion disk particles ===
+  var disk=[];
+  function initDisk(){
+    disk=[];CX=W/2;CY=H/2;EH=Math.min(W,H)*0.18;window._bhEH=EH;
+    for(var i=0;i<PARTICLES;i++){var a=Math.random()*Math.PI*2;var r=EH*1.1+Math.random()*(EH*2.2);disk.push({a:a,r:r,speed:.08+Math.random()*.25,size:.3+Math.random()*1.8,alpha:.05+Math.random()*.3,baseAlpha:.05+Math.random()*.3,baseR:r});}
+  }
+  initDisk();window.addEventListener("resize",initDisk);
+
+  // === Slow-moving stationary dashes ===
+  var dashes=[];
+  function initDashes(){
+    dashes=[];CX=W/2;CY=H/2;EH=Math.min(W,H)*0.18;window._bhEH=EH;
+    for(var i=0;i<DASHES;i++){
+      var a=Math.random()*Math.PI*2;
+      var r=EH*0.55+Math.random()*(EH*0.55);
+      dashes.push({a:a,r:r,speed:0.015+Math.random()*0.06,length:3+Math.random()*8,width:.4+Math.random()*1.2,alpha:.08+Math.random()*.25});
+    }
+  }
+  initDashes();window.addEventListener("resize",initDashes);
+
+  // === Gravitational lensing ===
+  function lens(sx,sy){
+    var dx=sx-CX,dy=sy-CY,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<EH*0.95)return null;
+    if(dist>EH*6)return{px:sx,py:sy};
+    var strength=1-dist/(EH*6);
+    var bend=Math.pow(strength,1.8)*EH*1.5;
+    var angle=Math.atan2(dy,dx);
+    var newA=angle+bend/(dist+EH)*0.3;
+    var newR=dist-bend*0.15;
+    return{px:CX+Math.cos(newA)*newR,py:CY+Math.sin(newA)*newR};
+  }
+
+  // === Render ===
+  function draw(ts){
+    time=ts*0.001;
+
+    // Smooth cursor tracking
+    smx+=(targetMx-smx)*0.05;smy+=(targetMy-smy)*0.05;
+    var cursorSpeed=Math.hypot(targetMx-smx,targetMy-smy);
+    var speedNorm=Math.min(cursorSpeed/EH,2);
+
+    // Shake (camera jitter when devouring)
+    var shake = (devourProgress > 0 && devourPhase < 3) ? devourProgress * devourProgress * 20 : 0;
+    shakeX = (Math.random()-0.5) * shake;
+    shakeY = (Math.random()-0.5) * shake;
+    var zf=zoomFactor;
+
+    ctx.save();
+    var isDark=document.documentElement.classList.contains("dark")||!document.documentElement.classList.contains("light");
+    var bgColor=isDark?"rgba(0,0,0,0.35)":"rgba(255,255,255,0.08)";
+    var starColor=isDark?"rgba(255,255,255":"rgba(80,80,80";
+    // Apply zoom + shake centered on black hole
+    ctx.translate(W/2,H/2);
+    var sx=1/zf, sy=1/zf;
+    if(devourProgress>0.3)sx*=1-devourProgress*0.3;
+    ctx.scale(sx,sy);
+    ctx.translate(-W/2+shakeX,-H/2+shakeY);
+    ctx.fillStyle=bgColor;ctx.fillRect(0,0,W,H);
+
+    // Stars (lensed)
+    var sc=starColor;
+    for(var i=0;i<stars.length;i++){
+      var s=stars[i];
+      
+      var sx = CX + Math.cos(s.a) * s.d;
+      var sy = CY + Math.sin(s.a) * s.d;
+
+      var l=lens(sx,sy);if(!l)continue;
+      var dist=Math.hypot(l.px-CX,l.py-CY);
+      var arcFactor=Math.max(0,1-dist/(EH*3));
+      
+      if(arcFactor>0.3){
+        // IT IS A DASH: Advance angle using its unique random speed
+        // The (1 + arcFactor) makes dashes slightly faster the closer they are to the center
+        s.a += s.speed * (1 + arcFactor) * (1 + devourProgress * 8);
+        
+        var arcLen=arcFactor*arcFactor*15;
+        var ang=Math.atan2(l.py-CY,l.px-CX);
+        ctx.strokeStyle=sc+","+(s.b*arcFactor)+")";
+        ctx.lineWidth=s.r*1.5*(1+arcFactor);
+        ctx.beginPath();
+        ctx.arc(CX,CY,Math.hypot(l.px-CX,l.py-CY),ang-0.02*arcLen,ang+0.02*arcLen);
+        ctx.stroke();
+      }else{
+        // IT IS A DOT: Angle remains unchanged, staying perfectly still
+        ctx.fillStyle=sc+","+(s.b)+")";
+        ctx.beginPath();
+        ctx.arc(l.px,l.py,s.r,0,Math.PI*2);
+        ctx.fill();
+      }
+    }
+
+    // Dashes orbiting near event horizon
+    for(var j=0;j<dashes.length;j++){
+      var dd=dashes[j];
+      dd.a+=dd.speed*(0.3+devourProgress*5);
+      var dx2=CX+Math.cos(dd.a)*dd.r;
+      var dy2=CY+Math.sin(dd.a)*dd.r*0.35;
+      var l2=lens(dx2,dy2);if(!l2)continue;
+      var ang2=Math.atan2(l2.py-CY,l2.px-CX);
+      ctx.strokeStyle=sc+","+dd.alpha+")";
+      ctx.lineWidth=dd.width;
+      ctx.beginPath();
+      ctx.arc(CX,CY,Math.hypot(l2.px-CX,l2.py-CY),ang2-0.04*dd.length,ang2+0.04*dd.length);
+      ctx.stroke();
+    }
+
+    // Accretion disk
+    for(var k=0;k<disk.length;k++){
+      var p=disk[k];
+      p.a+=p.speed*0.004*(1+speedNorm*2+devourProgress*10);
+      p.r=p.baseR+(p.baseR*0.02*Math.sin(p.a*3+time*0.5));
+      var sx3=CX+Math.cos(p.a)*p.r,sy3=CY+Math.sin(p.a)*p.r*0.3;
+      var l3=lens(sx3,sy3);if(!l3)continue;
+      var dist3=Math.hypot(l3.px-CX,l3.py-CY);
+      var distFact=(dist3-EH)/(EH*2.5);
+      var alpha=p.baseAlpha,rr,gg,bb;
+      if(distFact<0.15){rr=255;gg=255;bb=255;alpha=p.baseAlpha*2;}
+      else if(distFact<0.5){var t=distFact/0.5;rr=220+(1-t)*35;gg=210+(1-t)*45;bb=190+(1-t)*65;alpha=p.baseAlpha*(1-t*0.6);}
+      else{var t2=(distFact-0.5)/1.5;rr=160-t2*120;gg=150-t2*110;bb=140-t2*100;alpha=p.baseAlpha*(1-t2)*0.6;}
+      alpha*=(1-speedNorm*0.3);
+      var glow=ctx.createRadialGradient(l3.px,l3.py,0,l3.px,l3.py,p.size*2);
+      glow.addColorStop(0,"rgba("+Math.floor(rr)+","+Math.floor(gg)+","+Math.floor(bb)+","+Math.min(1,alpha)+")");
+      glow.addColorStop(0.6,"rgba("+Math.floor(rr/2)+","+Math.floor(gg/2)+","+Math.floor(bb/2)+","+(alpha*0.3)+")");
+      glow.addColorStop(1,"rgba(0,0,0,0)");
+      ctx.beginPath();ctx.arc(l3.px,l3.py,p.size*2,0,Math.PI*2);ctx.fillStyle=glow;ctx.fill();
+    }
+
+    // Photon ring
+    var pr=isDark?"255,255,255":"120,120,120";
+    var prGlow=ctx.createRadialGradient(CX,CY,EH*0.94,CX,CY,EH*1.08);
+    prGlow.addColorStop(0,"rgba(0,0,0,0)");prGlow.addColorStop(0.45,"rgba("+pr+",0.25)");
+    prGlow.addColorStop(0.55,"rgba("+pr+",0.4)");prGlow.addColorStop(0.7,"rgba("+pr+",0.08)");
+    prGlow.addColorStop(1,"rgba(0,0,0,0)");
+    ctx.beginPath();ctx.arc(CX,CY,EH*1.08,0,Math.PI*2);ctx.fillStyle=prGlow;ctx.fill();
+
+    // Event horizon
+    var ehGlow=ctx.createRadialGradient(CX,CY,EH*0.85,CX,CY,EH*1.0);
+    ehGlow.addColorStop(0,"rgba(0,0,0,1)");ehGlow.addColorStop(0.85,"rgba(0,0,0,1)");
+    ehGlow.addColorStop(1,"rgba(0,0,0,0)");
+    ctx.beginPath();ctx.arc(CX,CY,EH,0,Math.PI*2);ctx.fillStyle=ehGlow;ctx.fill();
+
+    ctx.restore();
+
+    // Drift target
+    targetMx+=velX*0.02;targetMy+=velY*0.02;
+    requestAnimationFrame(draw);
+  }
+
+  document.addEventListener("mousemove",function(e){
+    targetMx=e.clientX;targetMy=e.clientY;
+    velX=(e.clientX-smx)*0.1;velY=(e.clientY-smy)*0.1;
+  });
+  targetMx=CX;targetMy=CY;
+
+  requestAnimationFrame(draw);
+})();
+
+// ===== IDLE TIMER & DEVOUR ANIMATION LOOP =====
+var idleCounter=0,idleThreshold=30,zoomFactor=1,devourProgress=0,devouring=false,shakeX=0,shakeY=0;
+var lastActivity=Date.now();
+// Track all user activity
+document.addEventListener("mousemove",resetIdle);document.addEventListener("scroll",resetIdle);
+document.addEventListener("keydown",resetIdle);document.addEventListener("click",resetIdle);
+document.addEventListener("touchstart",resetIdle);
+
+function resetIdle(){
+  lastActivity=Date.now();
+  if(devouring) startRetreat();
+}
+
+var idleThreshold=30;
+function startDevour(){
+  devouring=true;devourPhase=1;devourProgress=0;retreating=false;
+  // Smooth transition prep
+  var all=document.querySelectorAll("nav,section,footer,#hero,.hc,.hero-content,#bat,#eb");
+  var len=all.length;
+  for(var a=0;a<len;a++) all[a].style.transition="opacity .6s,transform .6s,filter .6s";
+  animateDevour();
+}
+
+
+function animateDevour(){
+  if(!devouring) return;
+  devourProgress = Math.min(1, devourProgress + 0.001);
+  // Phase thresholds
+  if(devourProgress < 0.35) devourPhase = 1;
+  else if(devourProgress < 0.60) devourPhase = 2;
+  else {devourPhase = 3; hideBatForDevour();}
+  // Exponential zoom: 1 → 1 → 5 (first 35% barely moves, then escalates)
+  if(devourProgress<0.35) zoomFactor = 1 + devourProgress * 0.3;
+  else if(devourProgress<0.60) zoomFactor = 1.1 + Math.pow((devourProgress-0.35)/0.25,2) * 2;
+  else zoomFactor = 3 + Math.pow((devourProgress-0.60)/0.40,3) * 12;
+  applyDevourEffect();
+  if(devourProgress < 1) requestAnimationFrame(animateDevour);
+}
+function hideBatForDevour(){
+  var bat=document.getElementById("bat");
+  if(bat){bat.style.transition="opacity .3s,transform .5s";bat.style.transform="scale(0.01)";bat.style.opacity="0";}
+}
+function restoreBat(){
+  var bat=document.getElementById("bat");
+  if(bat){bat.style.transition="opacity .5s,transform .5s";bat.style.transform="none";bat.style.opacity="";}
+}
+
+function startRetreat(){
+  devouring=false;
+  retreating=true;
+  
+  var iv=setInterval(function(){
+    devourProgress=Math.max(0,devourProgress-0.03);
+    zoomFactor=1+devourProgress*2;
+    
+    // 1. Check if the retreat is completely finished FIRST
+    if(devourProgress<=0){
+      clearInterval(iv);
+      devourPhase=0; // Officially set to Phase 0
+      retreating=false;
+      
+      // 2. Trigger the effect one last time! 
+      // This forces the "else" block to run and instantly restores the text.
+      applyDevourEffect(); 
+      restoreBat();
+      return; // 3. Exit the interval immediately
+    }
+    
+    // 4. Otherwise, update the phases normally as it shrinks
+    if(devourProgress<0.35) devourPhase=1;
+    else if(devourProgress<0.60) devourPhase=2;
+    else devourPhase=3;
+    
+    applyDevourEffect();
+  },25);
+}
+
+
+// INJECT DUST SVG FILTER
+if(!document.getElementById('dust-filter-svg')){
+  var svgDiv = document.createElement('div');
+  svgDiv.innerHTML = `
+    <svg id="dust-filter-svg" style="position:absolute;width:0;height:0;pointer-events:none;">
+      <filter id="dust">
+        <feTurbulence type="fractalNoise" baseFrequency="0.15" numOctaves="3" result="noise"/>
+        <feDisplacementMap id="dust-scale" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </svg>
+  `;
+  document.body.appendChild(svgDiv);
+}
+
+
+function applyDevourEffect(){
+  var bw=window._bhW,bh=window._bhH,bhEH=window._bhEH;
+  var els=document.querySelectorAll("nav,h1,h2,h3,p,span,div.pc,div.card,div.ach-card,div.tl-item,.contact-item,.btn,footer,.hero-stats,.hero-btns,.hero-stat,#sub,#tp,#hn,#lgt,#nav,#eb,#lg,.tb,.nl,#hero .greeting,#hero .hc,.section-title,.section-label,.hero-btns,.skill-cat,.ach-card,li,a,.tl-item .d,.tl-item .t,.tl-item .co,.logo-btn,header *,.edu-card,.ec,.cg,.cc,#dcv,.text");
+  var len=els.length,dp=devourProgress;
+  var scrChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+  
+  if(devourPhase === 3) {
+    var p3_global = (dp - 0.60) / 0.40;
+    var dustScale = document.getElementById('dust-scale');
+    if(dustScale) dustScale.setAttribute('scale', String(p3_global * 150)); 
+  }
+
+  for(var i=0;i<len;i++){
+    var el=els[i],rect=el.getBoundingClientRect();
+    var ctx=rect.left+rect.width/2,cty=rect.top+rect.height/2;
+    var dx=ctx-bw/2,dy=cty-bh/2,dist=Math.sqrt(dx*dx+dy*dy);
+    var nearCenter=dist<bhEH*2.5;
+    
+    // Check if element is currently visible on the screen
+    var inViewport = (rect.top < bh && rect.bottom > 0 && rect.left < bw && rect.right > 0);
+    
+    var isNav = (el.tagName && el.tagName.toLowerCase() === 'nav') || el.id === 'nav';
+    var baseTransform = isNav ? "translateX(-50%) " : "";
+
+    // Safely cache original text
+    if(!el.dataset.checkedTxt){
+      if(el.children.length === 0 && el.textContent.trim().length > 0) {
+        el.dataset.orig = el.textContent;
+      }
+      el.dataset.checkedTxt = "true";
+    }
+
+    // Phase 1: zoom lens
+    if(devourPhase===1){
+      var z=1+dp*0.4;
+      el.style.transform = baseTransform + "scale("+z+")";
+      el.style.opacity="1";
+      el.style.filter="none";
+    }
+    // Phase 2: shake, blur, and SCRAMBLE (Only if on-screen)
+    else if(devourPhase===2){
+      var p2=(dp-0.35)/0.25; 
+      var shX=(Math.random()-0.5)*p2*12,shY=(Math.random()-0.5)*p2*12;
+      var bl=p2*1.5;
+      el.style.transform = baseTransform + "translate("+shX+"px,"+shY+"px)";
+      el.style.filter="blur("+bl+"px)";
+      el.style.opacity=String(1-p2*0.2);
+
+      // SCRAMBLE LOGIC: Throttled, and restricted to visible elements only
+      if(inViewport && el.dataset.orig && Math.random() < 0.3) {
+        if(Math.random() < p2) {
+          var orig = el.dataset.orig;
+          var res = "";
+          for(var c=0; c<orig.length; c++){
+            if(orig[c] === " ") { res += " "; continue; }
+            res += (Math.random() < p2) ? scrChars[Math.floor(Math.random()*scrChars.length)] : orig[c];
+          }
+          el.textContent = res;
+        }
+      }
+    }
+    // Phase 3: dust, break apart (Scrambling STOPS, Shake STOPS)
+    else if(devourPhase===3){
+      var p3=(dp-0.60)/0.40;
+      
+      if(el.closest("nav")){
+        el.style.opacity=String(1-Math.pow(p3,3));
+        if(isNav) el.style.transform = baseTransform;
+        el.style.filter = "url(#dust) blur("+(p3*3)+"px)";
+        continue;
+      } 
+      
+      var pull=Math.pow(p3,2)*2;
+      var sc=1-pull*0.9;if(sc<0.02)sc=0.02;
+      
+      // FIX: Use a smooth deterministic rotation based on the element's index (i) 
+      // instead of randomizing it every frame. This stops the violent vibration.
+      var dir = (i % 2 === 0 ? 1 : -1); 
+      var rot = dir * pull * 45; 
+      
+      var alpha=nearCenter?Math.max(0,1-pull*3):Math.max(0,1-pull*1.2);
+      if(p3>0.9)alpha=0;
+      
+      el.style.opacity=String(alpha);
+      el.style.transform = baseTransform + "scale("+sc+") rotate("+rot+"deg) translate("+(-dx*pull*0.6)+"px,"+(-dy*pull*0.6)+"px)";
+      el.style.filter = "url(#dust) blur("+(pull*4)+"px)";
+      
+    }else{
+      // Phase 0 / Reset: Restore everything back to normal
+      el.style.opacity="1";
+      el.style.transform = isNav ? baseTransform : "none";
+      el.style.filter="none";
+      
+      // Instantly revert text to the original unscrambled state
+      if(el.dataset.orig && el.textContent !== el.dataset.orig) {
+        el.textContent = el.dataset.orig;
+      }
+    }
+  }
+
+  // Bat fleeing effect
+  if(devourPhase>=2&&document.getElementById("bat")){
+    var bat=document.getElementById("bat");
+    var p3b=(dp>0.6)?(dp-0.6)/0.4:0;
+    var flee=devourPhase===2?(dp-0.35)/0.25*80:80-p3b*200;
+    bat.style.transform="translate("+(flee*(Math.random()-0.5))+"px,"+(flee*(Math.random()-0.8))+"px) scale("+(1-p3b*0.95)+")";
+    bat.style.filter="blur("+(p3b*4)+"px)";
+    if(p3b>0.7)bat.style.opacity="0";
+  }
+}
+
+// Idle timer check
+setInterval(function(){
+  if(document.hidden||!document.hasFocus())return;
+  var elapsed=(Date.now()-lastActivity)/1000;
+  idleCounter=elapsed;
+  if(idleCounter>=idleThreshold&&!devouring){startDevour()}
+},1000);
+const pl2=document.getElementById("pl");
+function hidePreloader(){if(pl2)pl2.classList.add("h")}
+// Always hide within 4 seconds max, even if something fails
+setTimeout(hidePreloader,4000);
+// Also hide on window load
+window.addEventListener("load",hidePreloader);
+// Hero animations after load
+window.addEventListener("load",()=>{
+  setTimeout(()=>{
+    document.querySelectorAll("#hero .hc > *").forEach((el,i)=>{
+      if(typeof Motion!=="undefined"&&Motion.animate){
+        Motion.animate(el,{opacity:[0,1],y:[30,0]},{duration:.7,delay:i*.1,ease:"easeOut"});
+      }else{el.style.opacity="1";el.style.transform="translateY(0)"}
+    });
+    initMotion();
+  },300);
+});
+
+// ===== MOTION JS ANIMATIONS (wrapped in safety) =====
+function initMotion(){
+  try{if(typeof Motion!=="undefined"){
+    const {animate,stagger,scroll}=Motion;
+    if(scroll){scroll(animate,".section-title",{opacity:[0,1],y:[40,0]},{duration:.7,ease:"easeOut"},{target:window,axis:"y"});
+    scroll(animate,".pc,.card,.ach-card",{opacity:[0,1],y:[30,0]},{duration:.6,stagger:.06,ease:"easeOut"},{target:window,axis:"y",offset:["start end","end start"]});
+    scroll(animate,".contact-item",{opacity:[0,1],y:[20,0]},{duration:.5,stagger:.08,ease:"easeOut"},{target:window,axis:"y"});
+    scroll(animate,".tl-item",{opacity:[0,1],x:[-20,0]},{duration:.6,stagger:.1,ease:"easeOut"},{target:window,axis:"y"});}
+  }}catch(e){}
+}
+// Fallback: if Motion.js takes >3s, show elements anyway
+setTimeout(()=>{document.querySelectorAll(".pc,.card,.ach-card,.contact-item,.tl-item,.section-title").forEach(el=>{el.style.opacity="1";el.style.transform="none"})},3000);
+
+// -- Typing effect
+const phrases=["AI/Software Engineer","Generative AI Builder","Cloud-Native Developer","Rust Systems Engineer"];
+let pi=0,ci=0,del=false;
+(function T(){
+  const cur=phrases[pi],el=document.getElementById("sub");
+  if(!el)return setTimeout(T,200);
+  if(!del){el.textContent=cur.substring(0,ci+1);ci++;if(ci===cur.length){del=true;setTimeout(T,2000);return}}
+  else{el.textContent=cur.substring(0,ci-1);ci--;if(ci===0){del=false;pi=(pi+1)%phrases.length}}
+  setTimeout(T,del?35:70);
+})();
+
+// -- Logo scramble
+const lgt=document.getElementById("logo-text"),lg=document.querySelector(".logo-btn");
+const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+let lt;
+function scr(el,target,ms,cb){
+  let f=Math.floor(ms/35),c=0;
+  const iv=setInterval(()=>{c++;let txt="";
+    for(let i=0;i<target.length;i++){
+      if(c>f)txt+=target[i];
+      else txt+=Math.random()<c/f?target[i]:chars[Math.floor(Math.random()*chars.length)];
+    }
+    el.textContent=txt;if(c>f){clearInterval(iv);el.textContent=target;if(cb)cb()}
+  },35);
+}
+lt=setTimeout(function f(){scr(lgt,"ABF",500);lt=setTimeout(f,3500+Math.random()*3000)},3000);
+lg.addEventListener("mouseenter",()=>{clearTimeout(lt);scr(lgt,"ABF",500)});
+lg.addEventListener("mouseleave",()=>{clearTimeout(lt);lgt.textContent="ABF";lt=setTimeout(function f(){scr(lgt,"ABF",500);lt=setTimeout(f,3500+Math.random()*3000)},3000)});
+
+// -- Navbar scroll
+const nav=document.getElementById("nav");
+const secs=document.querySelectorAll("section[id]");
+const nls=document.querySelectorAll(".nav-links a");
+window.addEventListener("scroll",()=>{
+  const sy=window.scrollY;
+  nav.classList.toggle("scrolled",sy>50);
+  let cur="";secs.forEach(s=>{if(sy+150>=s.offsetTop)cur=s.getAttribute("id")});
+  nls.forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+cur));
+});
+
+// -- Theme
+const h=document.documentElement,tt=document.getElementById("tt"),ti=document.getElementById("ti");
+const saved=localStorage.getItem("theme");
+if(saved==="light"){h.classList.remove("dark");h.classList.add("light");ti.className="fa-solid fa-sun"}
+tt.addEventListener("click",()=>{
+  const isD=h.classList.contains("dark");
+  h.classList.toggle("dark");h.classList.toggle("light");
+  localStorage.setItem("theme",isD?"light":"dark");
+  ti.className=isD?"fa-solid fa-sun":"fa-solid fa-moon";
+});
+
+// -- Bat (circle cursor after 5s idle, tab-aware)
+const bat=document.getElementById("bat"),bim=document.getElementById("bat-img");
+let bActive=false,ci2=null,cto=null,lmx=0,lmy=0;
+const IDLE=5000,FL=2500;
+function sb(mx,my){
+  if(bActive||document.hidden||!document.hasFocus())return;
+  bActive=true;lmx=mx;lmy=my;
+  const sw=window.innerWidth,sx=Math.random()>0.5?-100:sw+100;
+  bim.src=sx<mx?"bat-right.gif":"bat-left.gif";
+  bat.style.transition="none";bat.style.transform=`translate(${sx}px,${my}px)`;bat.style.opacity="1";
+  setTimeout(()=>{bat.style.transition=`transform ${FL/1000}s linear`;bat.style.transform=`translate(${mx}px,${my}px)`},20);
+  setTimeout(()=>{if(bActive)sc()},FL);
+}
+function sc(){
+  const r=65;let a=Math.random()*Math.PI*2,lastDir="";
+  bat.style.transition="transform .08s linear";
+  ci2=setInterval(()=>{
+    if(!bActive||document.hidden||!document.hasFocus()){hb();return}
+    const x=lmx+r*Math.cos(a),y=lmy+r*Math.sin(a);
+    const dir=Math.sin(a)>0?"left":"right";
+    if(dir!==lastDir){bim.src=dir==="left"?"bat-left.gif":"bat-right.gif";lastDir=dir}
+    bat.style.transform=`translate(${x}px,${y}px)`;a+=.08;
+  },40);
+}
+function hb(){if(!bActive)return;bActive=false;clearInterval(ci2);
+  const sw=window.innerWidth,fx=lmx>sw/2?sw+100:-100;
+  bat.style.transition=`transform ${FL/1000}s linear,opacity .8s`;
+  bat.style.transform=`translate(${fx}px,${lmy}px)`;bat.style.opacity="0";
+}
+document.addEventListener("mousemove",e=>{clearTimeout(cto);lmx=e.clientX;lmy=e.clientY;if(bActive)hb();cto=setTimeout(()=>sb(e.clientX,e.clientY),IDLE)});
+document.addEventListener("visibilitychange",()=>{if(document.hidden)hb()});
+window.addEventListener("blur",hb);
+
+// -- Konami code
+const K=[38,38,40,40,37,39,37,39,66,65];let ki=0;
+document.addEventListener("keydown",e=>{
+  if(e.keyCode===K[ki]){ki++;if(ki===K.length){ki=0;alert("🏆 Konami Code!")}}
+  else ki=0;
+});
+
+
+
+// -- CV Download
+document.getElementById("dcv").addEventListener("click",e=>{e.preventDefault();const a=document.createElement("a");a.href="Ahmed_Bin_Faisal_CV.pdf";a.download="Ahmed_Bin_Faisal_CV.pdf";a.click()});
+</script>
 </body>
 </html>
