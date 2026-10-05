@@ -399,10 +399,21 @@ function applyDevourEffect(){
   var ctx=cvs.getContext("2d");
   if(!ctx){return}
   window._bhW=window.innerWidth;window._bhH=window.innerHeight;
-  function rs(){window._bhW=cvs.width=window.innerWidth;window._bhH=cvs.height=window.innerHeight}
-  rs();window.addEventListener("resize",rs);
-  var W=window._bhW,H=window._bhH,time=0,targetMx=0,targetMy=0,velX=0,velY=0,smx=0,smy=0;
-  rs();window.addEventListener("resize",rs);
+  function rs(){window._bhW=cvs.width=window.innerWidth;window._bhH=cvs.height=window.innerHeight; W=window._bhW; H=window._bhH; CX=W/2; CY=H/2; EH=Math.min(W,H)*0.18; window._bhEH=EH;}
+  var W=window.innerWidth,H=window.innerHeight,time=0,targetMx=W/2,targetMy=H/2,velX=0,velY=0,smx=W/2,smy=H/2,CX=W/2,CY=H/2,EH=0;
+  rs();
+  
+  var lastMobileW = window.innerWidth;
+  window.addEventListener("resize", function() {
+    rs();
+    // Stop mobile address-bar scrolling from repeatedly wiping and resetting the particles!
+    if (Math.abs(window.innerWidth - lastMobileW) > 50) {
+      if(typeof initStars === 'function') initStars(); 
+      if(typeof initDisk === 'function') initDisk(); 
+      if(typeof initDashes === 'function') initDashes();
+      lastMobileW = window.innerWidth;
+    }
+  });
 
   var CX=W/2,CY=H/2,EH=Math.min(W,H)*0.18;window._bhEH=EH;
 
@@ -428,7 +439,7 @@ function applyDevourEffect(){
       });
     }
   }
-  initStars();window.addEventListener("resize",initStars);
+  initStars();
 
   // === Accretion disk particles ===
   var disk=[];
@@ -436,7 +447,7 @@ function applyDevourEffect(){
     disk=[];CX=W/2;CY=H/2;EH=Math.min(W,H)*0.18;window._bhEH=EH;
     for(var i=0;i<PARTICLES;i++){var a=Math.random()*Math.PI*2;var r=EH*1.1+Math.random()*(EH*2.2);disk.push({a:a,r:r,speed:.08+Math.random()*.25,size:.3+Math.random()*1.8,alpha:.05+Math.random()*.3,baseAlpha:.05+Math.random()*.3,baseR:r});}
   }
-  initDisk();window.addEventListener("resize",initDisk);
+  initDisk();
 
   // === Slow-moving stationary dashes ===
   var dashes=[];
@@ -448,7 +459,7 @@ function applyDevourEffect(){
       dashes.push({a:a,r:r,speed:0.015+Math.random()*0.06,length:3+Math.random()*8,width:.4+Math.random()*1.2,alpha:.08+Math.random()*.25});
     }
   }
-  initDashes();window.addEventListener("resize",initDashes);
+  initDashes();
 
   // === Gravitational lensing ===
   function lens(sx,sy){
@@ -978,13 +989,16 @@ function updateDoomsdayClock() {
     // Calculate accurate countdown time
     if (!devouring) {
       var elapsed = (Date.now() - lastActivity) / 1000;
-      var remaining = idleThreshold - elapsed;
+      var toDevour = idleThreshold - elapsed;
       
-      // If time is up but devour is blocked (e.g., on mobile), show the error!
-      if (remaining <= 0) {
+      // Calculate visual time (Idle 30s + 10s buffer = 40s total)
+      clockVisualTime = toDevour + 10; 
+
+      // If mobile devour is disabled, let the clock visually reach exactly 00:00:00:00 before throwing the error!
+      if (clockVisualTime <= 0) {
         timeEl.textContent = "ER:R0:R2:05";
         
-        // Add a permanent glitch effect for the system error state
+        // Permanent glitch effect for the system error state
         if (Math.random() < 0.3) {
           clock.style.transform = "translate(" + (Math.random()*6-3) + "px," + (Math.random()*6-3) + "px)";
           timeEl.style.color = Math.random() < 0.2 ? "#fff" : "var(--primary)";
@@ -996,8 +1010,6 @@ function updateDoomsdayClock() {
         requestAnimationFrame(updateDoomsdayClock);
         return; 
       }
-      
-      clockVisualTime = remaining + 10; 
     } else {
       clockVisualTime = Math.max(0, (0.60 - devourProgress) * 16.66); 
     }
