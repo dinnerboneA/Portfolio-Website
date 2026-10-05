@@ -948,8 +948,22 @@ function hb(){if(!bActive)return;bActive=false;clearInterval(ci2);
   bat.style.transition=`transform ${FL/1000}s linear,opacity .8s`;
   bat.style.transform=`translate(${fx}px,${lmy}px)`;bat.style.opacity="0";
 }
-document.addEventListener("mousemove",e=>{clearTimeout(cto);lmx=e.clientX;lmy=e.clientY;if(bActive)hb();cto=setTimeout(()=>sb(e.clientX,e.clientY),IDLE)});
-document.addEventListener("visibilitychange",()=>{if(document.hidden)hb()});
+// Unified reset function for the Bat and Clock
+function resetBat(e){
+  clearTimeout(cto);
+  // Update spawn coordinates only if the event has a mouse/touch position
+  if(e && e.clientX !== undefined){ lmx=e.clientX; lmy=e.clientY; }
+  
+  if(bActive) hb(); // Hides the bat (which automatically triggers the clock rewind)
+  
+  cto=setTimeout(()=>sb(lmx,lmy),IDLE);
+}
+
+document.addEventListener("mousemove", resetBat);
+document.addEventListener("scroll", resetBat);
+document.addEventListener("keydown", resetBat);
+document.addEventListener("click", resetBat);
+document.addEventListener("touchstart", resetBat);document.addEventListener("visibilitychange",()=>{if(document.hidden)hb()});
 window.addEventListener("blur",hb);
 
 // -- Konami code
