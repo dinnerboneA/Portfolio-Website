@@ -158,12 +158,80 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
 /* ===== BAT ===== */
 #bat{position:fixed;z-index:9998;pointer-events:none;opacity:0;transition:opacity .8s}
 #bat img{width:90px}
+
+
+/* ===== MOBILE RESPONSIVE NAVBAR ===== */
+@media (max-width: 768px) {
+  nav {
+    width: 92%;
+    padding: 0.5rem 1rem;
+    gap: 0.8rem;
+  }
+  .nav-links {
+    gap: 0.8rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+  }
+  .nav-links::-webkit-scrollbar {
+    display: none; /* Hide scrollbar Chrome/Safari/Opera */
+  }
+  .nav-links a {
+    font-size: 0.75rem;
+  }
+  .logo-btn {
+    font-size: 0.9rem;
+  }
+}
+
+
+
+/* ===== DOOMSDAY CLOCK ===== */
+#doomsday-clock {
+  position: fixed;
+  bottom: 2rem;
+  right: 2.5rem;
+  text-align: right;
+  z-index: 9999;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 1.5s, transform 1.5s, visibility 1.5s; 
+  pointer-events: none;
+  font-family: monospace;
+}
+#doomsday-clock.h {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(15px);
+}
+.dd-lbl {
+  font-size: 0.75rem;
+  color: var(--primary);
+  letter-spacing: 0.25em;
+  margin-bottom: 0.3rem;
+  opacity: 0.8;
+}
+.dd-time {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--primary);
+  text-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+  line-height: 1;
+}
+
+
 </style>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
 <div id="pl"><img src="loader.gif" width="100"></div>
 <div id="bat"><img id="bat-img" src=""></div>
+<!-- ADD THE CLOCK HERE -->
+<div id="doomsday-clock" class="h">
+  <div class="dd-lbl">SYSTEM COLLAPSE IN</div>
+  <div class="dd-time" id="dd-time">00:00</div>
+</div>
 
 <nav id="nav">
   <a href="#" class="logo-btn">&lt;<span id="logo-text">ABF</span>/&gt;</a>
@@ -337,7 +405,11 @@ function applyDevourEffect(){
   rs();window.addEventListener("resize",rs);
 
   var CX=W/2,CY=H/2,EH=Math.min(W,H)*0.18;window._bhEH=EH;
-  var STARS=200,PARTICLES=450,DASHES=60;
+
+  var isMobile = window.innerWidth < 768;
+  var STARS = isMobile ? 60 : 200;
+  var PARTICLES = isMobile ? 120 : 450;
+  var DASHES = isMobile ? 20 : 60;
 
   // === Star field ===
   var stars=[];
@@ -480,11 +552,18 @@ function applyDevourEffect(){
       else if(distFact<0.5){var t=distFact/0.5;rr=220+(1-t)*35;gg=210+(1-t)*45;bb=190+(1-t)*65;alpha=p.baseAlpha*(1-t*0.6);}
       else{var t2=(distFact-0.5)/1.5;rr=160-t2*120;gg=150-t2*110;bb=140-t2*100;alpha=p.baseAlpha*(1-t2)*0.6;}
       alpha*=(1-speedNorm*0.3);
-      var glow=ctx.createRadialGradient(l3.px,l3.py,0,l3.px,l3.py,p.size*2);
-      glow.addColorStop(0,"rgba("+Math.floor(rr)+","+Math.floor(gg)+","+Math.floor(bb)+","+Math.min(1,alpha)+")");
-      glow.addColorStop(0.6,"rgba("+Math.floor(rr/2)+","+Math.floor(gg/2)+","+Math.floor(bb/2)+","+(alpha*0.3)+")");
-      glow.addColorStop(1,"rgba(0,0,0,0)");
-      ctx.beginPath();ctx.arc(l3.px,l3.py,p.size*2,0,Math.PI*2);ctx.fillStyle=glow;ctx.fill();
+      if (typeof isMobile !== 'undefined' && isMobile) {
+        ctx.fillStyle = "rgba(" + Math.floor(rr) + "," + Math.floor(gg) + "," + Math.floor(bb) + "," + Math.min(1, alpha) + ")";
+        ctx.beginPath();
+        ctx.arc(l3.px, l3.py, p.size * 1.5, 0, Math.PI*2);
+        ctx.fill();
+      } else {
+        var glow=ctx.createRadialGradient(l3.px,l3.py,0,l3.px,l3.py,p.size*2);
+        glow.addColorStop(0,"rgba("+Math.floor(rr)+","+Math.floor(gg)+","+Math.floor(bb)+","+Math.min(1,alpha)+")");
+        glow.addColorStop(0.6,"rgba("+Math.floor(rr/2)+","+Math.floor(gg/2)+","+Math.floor(bb/2)+","+(alpha*0.3)+")");
+        glow.addColorStop(1,"rgba(0,0,0,0)");
+        ctx.beginPath();ctx.arc(l3.px,l3.py,p.size*2,0,Math.PI*2);ctx.fillStyle=glow;ctx.fill();
+      }
     }
 
     // Photon ring
@@ -610,9 +689,15 @@ if(!document.getElementById('dust-filter-svg')){
 }
 
 
+var cachedDevourEls = null;
+
 function applyDevourEffect(){
   var bw=window._bhW,bh=window._bhH,bhEH=window._bhEH;
-  var els=document.querySelectorAll("nav,h1,h2,h3,p,span,div.pc,div.card,div.ach-card,div.tl-item,.contact-item,.btn,footer,.hero-stats,.hero-btns,.hero-stat,#sub,#tp,#hn,#lgt,#nav,#eb,#lg,.tb,.nl,#hero .greeting,#hero .hc,.section-title,.section-label,.hero-btns,.skill-cat,.ach-card,li,a,.tl-item .d,.tl-item .t,.tl-item .co,.logo-btn,header *,.edu-card,.ec,.cg,.cc,#dcv,.text");
+  
+  if (!cachedDevourEls) {
+    cachedDevourEls = document.querySelectorAll("nav,h1,h2,h3,p,span,div.pc,div.card,div.ach-card,div.tl-item,.contact-item,.btn,footer,.hero-stats,.hero-btns,.hero-stat,#sub,#tp,#hn,#lgt,#nav,#eb,#lg,.tb,.nl,#hero .greeting,#hero .hc,.section-title,.section-label,.hero-btns,.skill-cat,.ach-card,li,a,.tl-item .d,.tl-item .t,.tl-item .co,.logo-btn,header *,.edu-card,.ec,.cg,.cc,#dcv,.text,#doomsday-clock");
+  }
+  var els = cachedDevourEls;
   var len=els.length,dp=devourProgress;
   var scrChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
   
@@ -721,12 +806,19 @@ function applyDevourEffect(){
   }
 }
 
+// ===== DEVOUR MOBILE DEBUG TOGGLE (Set to true to enable on mobile) =====
+var ENABLE_DEVOUR_ON_MOBILE = false;
+
 // Idle timer check
 setInterval(function(){
   if(document.hidden||!document.hasFocus())return;
   var elapsed=(Date.now()-lastActivity)/1000;
   idleCounter=elapsed;
-  if(idleCounter>=idleThreshold&&!devouring){startDevour()}
+  if(idleCounter>=idleThreshold&&!devouring){
+    // Blocks the devour effect on screens smaller than 768px unless the toggle is true
+    if(window.innerWidth < 768 && !ENABLE_DEVOUR_ON_MOBILE) return;
+    startDevour();
+  }
 },1000);
 const pl2=document.getElementById("pl");
 function hidePreloader(){if(pl2)pl2.classList.add("h")}
@@ -750,10 +842,14 @@ window.addEventListener("load",()=>{
 function initMotion(){
   try{if(typeof Motion!=="undefined"){
     const {animate,stagger,scroll}=Motion;
-    if(scroll){scroll(animate,".section-title",{opacity:[0,1],y:[40,0]},{duration:.7,ease:"easeOut"},{target:window,axis:"y"});
-    scroll(animate,".pc,.card,.ach-card",{opacity:[0,1],y:[30,0]},{duration:.6,stagger:.06,ease:"easeOut"},{target:window,axis:"y",offset:["start end","end start"]});
-    scroll(animate,".contact-item",{opacity:[0,1],y:[20,0]},{duration:.5,stagger:.08,ease:"easeOut"},{target:window,axis:"y"});
-    scroll(animate,".tl-item",{opacity:[0,1],x:[-20,0]},{duration:.6,stagger:.1,ease:"easeOut"},{target:window,axis:"y"});}
+    if(scroll && window.innerWidth > 768){
+      scroll(animate,".section-title",{opacity:[0,1],y:[40,0]},{duration:.7,ease:"easeOut"},{target:window,axis:"y"});
+      scroll(animate,".pc,.card,.ach-card",{opacity:[0,1],y:[30,0]},{duration:.6,stagger:.06,ease:"easeOut"},{target:window,axis:"y",offset:["start end","end start"]});
+      scroll(animate,".contact-item",{opacity:[0,1],y:[20,0]},{duration:.5,stagger:.08,ease:"easeOut"},{target:window,axis:"y"});
+      scroll(animate,".tl-item",{opacity:[0,1],x:[-20,0]},{duration:.6,stagger:.1,ease:"easeOut"},{target:window,axis:"y"});
+    } else {
+      document.querySelectorAll(".pc,.card,.ach-card,.contact-item,.tl-item,.section-title").forEach(el=>{el.style.opacity="1";el.style.transform="none"});
+    }
   }}catch(e){}
 }
 // Fallback: if Motion.js takes >3s, show elements anyway
@@ -849,6 +945,84 @@ document.addEventListener("keydown",e=>{
   if(e.keyCode===K[ki]){ki++;if(ki===K.length){ki=0;alert("🏆 Konami Code!")}}
   else ki=0;
 });
+
+
+
+// ===== DOOMSDAY CLOCK LOGIC =====
+var clockVisualTime = 40; // Tracks the visual time for the rewind effect
+
+function updateDoomsdayClock() {
+  var clock = document.getElementById('doomsday-clock');
+  var timeEl = document.getElementById('dd-time');
+  
+  if (!clock || !timeEl) {
+    requestAnimationFrame(updateDoomsdayClock);
+    return;
+  }
+  
+  // Phase 3: The clock gets devoured! 
+  // We freeze the text at zero and let applyDevourEffect() take over the CSS transforms.
+  if (devourPhase >= 3) {
+    timeEl.textContent = "00:00:00:00";
+    requestAnimationFrame(updateDoomsdayClock);
+    return; 
+  }
+  
+  var shouldShow = (bActive || devouring) && devourPhase < 3 && !retreating;
+  
+  if (shouldShow) {
+    clock.classList.remove('h');
+    
+    // Calculate accurate countdown time
+    if (!devouring) {
+      var elapsed = (Date.now() - lastActivity) / 1000;
+      clockVisualTime = Math.max(0, idleThreshold - elapsed) + 10; 
+    } else {
+      clockVisualTime = Math.max(0, (0.60 - devourProgress) * 16.66); 
+    }
+    
+    // Glitch effect on the clock text during Phase 2
+    if (devourPhase === 2 && Math.random() < 0.3) {
+      clock.style.transform = "translate(" + (Math.random()*8-4) + "px," + (Math.random()*8-4) + "px)";
+      timeEl.style.textShadow = "0 0 20px #fff";
+      timeEl.style.color = Math.random() < 0.2 ? "#fff" : "var(--primary)";
+    } else {
+      clock.style.transform = ""; // Clears inline transform
+      timeEl.style.textShadow = "0 0 15px rgba(239, 68, 68, 0.6)";
+      timeEl.style.color = "var(--primary)";
+    }
+    
+  } else {
+    // RESET / REWIND STATE
+    clock.classList.add('h'); // Triggers the clean 0.5s CSS fade-out & slide-down
+    clock.style.transform = ""; // Ensure inline transforms are cleared so CSS slide works
+    timeEl.style.textShadow = "0 0 15px rgba(239, 68, 68, 0.6)";
+    timeEl.style.color = "var(--primary)";
+    
+    // Rapidly rewind the clock numbers forward while it fades out
+    clockVisualTime += 0.1; 
+    var maxTime = idleThreshold + 10;
+    if (clockVisualTime > maxTime) clockVisualTime = maxTime;
+  }
+  
+  // Format to HH:MM:SS:ms
+  var t = clockVisualTime;
+  var hh = Math.floor(t / 3600);
+  var mm = Math.floor((t % 3600) / 60);
+  var secs = Math.floor(t % 60);
+  var ms = Math.floor((t - Math.floor(t)) * 100);
+  
+  timeEl.textContent = (hh < 10 ? "0" : "") + hh + ":" + 
+                       (mm < 10 ? "0" : "") + mm + ":" + 
+                       (secs < 10 ? "0" : "") + secs + ":" + 
+                       (ms < 10 ? "0" : "") + ms;
+  
+  requestAnimationFrame(updateDoomsdayClock);
+}
+// Boot up the continuous clock loop
+requestAnimationFrame(updateDoomsdayClock);
+
+
 
 
 
