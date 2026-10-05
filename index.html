@@ -467,10 +467,11 @@ function applyDevourEffect(){
   function draw(ts){
     time=ts*0.001;
 
-    // Smooth cursor tracking
+    // Smooth cursor tracking (Locks center and disables speed-up on mobile)
+    if (typeof isMobile !== 'undefined' && isMobile) { targetMx = CX; targetMy = CY; velX = 0; velY = 0; }
     smx+=(targetMx-smx)*0.05;smy+=(targetMy-smy)*0.05;
     var cursorSpeed=Math.hypot(targetMx-smx,targetMy-smy);
-    var speedNorm=Math.min(cursorSpeed/EH,2);
+    var speedNorm = (typeof isMobile !== 'undefined' && isMobile) ? 0 : Math.min(cursorSpeed/EH,2);
 
     // Shake (camera jitter when devouring)
     var shake = (devourProgress > 0 && devourPhase < 3) ? devourProgress * devourProgress * 20 : 0;
@@ -588,6 +589,7 @@ function applyDevourEffect(){
   }
 
   document.addEventListener("mousemove",function(e){
+    if (typeof isMobile !== 'undefined' && isMobile) return; // Ignore on mobile
     targetMx=e.clientX;targetMy=e.clientY;
     velX=(e.clientX-smx)*0.1;velY=(e.clientY-smy)*0.1;
   });
@@ -976,7 +978,26 @@ function updateDoomsdayClock() {
     // Calculate accurate countdown time
     if (!devouring) {
       var elapsed = (Date.now() - lastActivity) / 1000;
-      clockVisualTime = Math.max(0, idleThreshold - elapsed) + 10; 
+      var remaining = idleThreshold - elapsed;
+      
+      // If time is up but devour is blocked (e.g., on mobile), show the error!
+      if (remaining <= 0) {
+        timeEl.textContent = "ER:R0:R2:05";
+        
+        // Add a permanent glitch effect for the system error state
+        if (Math.random() < 0.3) {
+          clock.style.transform = "translate(" + (Math.random()*6-3) + "px," + (Math.random()*6-3) + "px)";
+          timeEl.style.color = Math.random() < 0.2 ? "#fff" : "var(--primary)";
+        } else {
+          clock.style.transform = "";
+          timeEl.style.color = "var(--primary)";
+        }
+        
+        requestAnimationFrame(updateDoomsdayClock);
+        return; 
+      }
+      
+      clockVisualTime = remaining + 10; 
     } else {
       clockVisualTime = Math.max(0, (0.60 - devourProgress) * 16.66); 
     }
