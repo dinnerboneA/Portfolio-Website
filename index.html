@@ -187,6 +187,45 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
 
 
 
+/* ===== MOBILE NOTIFICATION ===== */
+#mobile-notice {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(150%);
+  background: rgba(10, 10, 30, 0.95);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 0.8rem 1.2rem;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  width: 90%;
+  max-width: 350px;
+}
+#mobile-notice.show {
+  transform: translateX(-50%) translateY(0);
+}
+#mobile-notice p {
+  font-size: 0.75rem;
+  color: var(--text);
+  line-height: 1.4;
+  margin: 0;
+}
+#mobile-notice button {
+  background: none;
+  border: none;
+  color: var(--text2);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
+
 /* ===== DOOMSDAY CLOCK ===== */
 #doomsday-clock {
   position: fixed;
@@ -221,12 +260,190 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
 }
 
 
+
+
+/* ===== PANNING UNIVERSE TRANSITION ===== */
+#universe-container {
+  position: fixed; 
+  top: 0; left: 0; 
+  width: 250vw; 
+  height: 100vh;
+  z-index: -2;
+  transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s;
+  background-color: #050510; 
+}
+/* Light Mode Background */
+.light #universe-container {
+  background-color: #f1f5f9;
+}
+
+/* The Starry Gap (Bridge) - DARK MODE */
+#universe-container::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: -1;
+  background-image: 
+    radial-gradient(1.5px 1.5px at 15% 25%, #ffffff, transparent),
+    radial-gradient(1px 1px at 30% 75%, rgba(255,255,255,0.8), transparent),
+    radial-gradient(2px 2px at 75% 15%, #ffffff, transparent),
+    radial-gradient(1.5px 1.5px at 45% 45%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 85% 65%, #ffffff, transparent),
+    radial-gradient(2px 2px at 20% 85%, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1px 1px at 65% 35%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 90% 15%, #ffffff, transparent),
+    radial-gradient(1px 1px at 50% 90%, rgba(255,255,255,0.8), transparent);
+  background-size: 350px 350px, 400px 400px, 300px 300px, 200px 200px, 250px 250px, 220px 220px, 120px 120px, 150px 150px, 100px 100px;
+  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0.08) 15%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,1) 85%);
+  mask-image: linear-gradient(to right, rgba(0,0,0,0.08) 15%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,1) 85%);
+  transition: background-image 0.5s;
+}
+
+/* The Starry Gap (Bridge) - LIGHT MODE */
+.light #universe-container::before {
+  background-image: 
+    radial-gradient(1.5px 1.5px at 15% 25%, #475569, transparent),
+    radial-gradient(1px 1px at 30% 75%, rgba(71,85,105,0.8), transparent),
+    radial-gradient(2px 2px at 75% 15%, #475569, transparent),
+    radial-gradient(1.5px 1.5px at 45% 45%, rgba(71,85,105,0.7), transparent),
+    radial-gradient(1px 1px at 85% 65%, #475569, transparent),
+    radial-gradient(2px 2px at 20% 85%, rgba(71,85,105,0.9), transparent),
+    radial-gradient(1px 1px at 65% 35%, rgba(71,85,105,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 90% 15%, #475569, transparent),
+    radial-gradient(1px 1px at 50% 90%, rgba(71,85,105,0.8), transparent);
+}
+
+#universe-container .front,
+#universe-container .back {
+  position: absolute;
+  top: 0; 
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+}
+
+#universe-container .front {
+  left: 0;
+  transform: none !important;
+  -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+  mask-image: linear-gradient(to right, black 80%, transparent 100%);
+}
+
+#universe-container .back {
+  left: 150vw; 
+  transform: none !important;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%);
+  mask-image: linear-gradient(to right, transparent 0%, black 20%);
+}
+
+.turned-around {
+  transform: translateX(-150vw) !important;
+}
+
+
+
+/* ===== PROJECT CARD UPGRADES ===== */
+#proj-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
+  z-index: 9000; opacity: 0; visibility: hidden; transition: all 0.4s;
+}
+#proj-overlay.active { opacity: 1; visibility: visible; }
+
+
+
+.pc { cursor: pointer; display: flex; flex-direction: column; overflow: hidden; z-index: 1; }
+.pc:hover { transform: scale(1.03) translateY(-6px); z-index: 10; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+
+/* Hover Image Preview */
+.pc-hover-img { height: 0; opacity: 0; transition: all 0.4s ease; overflow: hidden; border-radius: var(--radius); }
+.pc:hover .pc-hover-img { height: 140px; opacity: 1; margin-bottom: 1rem; margin-top: 0.5rem; }
+.pc-hover-img img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Expanded / Focus State */
+.pc.expanded {
+  position: fixed; top: 50%; left: 50%;
+  width: 90vw; max-width: 850px; max-height: 85vh; 
+  /* Fix scrollbar bug by hiding horizontal overflow and locking vertical */
+  overflow-y: auto; overflow-x: hidden;
+  z-index: 9001; cursor: default;
+  /* Add 3D Flip Animation */
+  animation: flipOpen 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+  /* Add padding so content doesn't crash into the scrollbar */
+  padding-right: 1.2rem;
+}
+
+/* The 3D Flip Keyframes */
+@keyframes flipOpen {
+  0% { transform: translate(-50%, -50%) perspective(1500px) rotateY(-90deg) scale(0.8); opacity: 0; }
+  100% { transform: translate(-50%, -50%) perspective(1500px) rotateY(0deg) scale(1); opacity: 1; }
+}
+
+@keyframes flipClose {
+  0% { transform: translate(-50%, -50%) perspective(1500px) rotateY(0deg) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) perspective(1500px) rotateY(90deg) scale(0.8); opacity: 0; }
+}
+
+/* Applied via JS when the close button is clicked */
+.pc.closing {
+  animation: flipClose 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards !important;
+}
+/* Instantly hide the inner details so they don't awkwardly stick out during the flip */
+.pc.closing .pc-details, 
+.pc.closing .pc-close {
+  opacity: 0 !important;
+  animation: none !important;
+  transition: opacity 0.15s;
+}
+
+/* Custom Modal Scrollbar (Keeps it cleanly inside the rounded borders) */
+.pc.expanded::-webkit-scrollbar { width: 6px; }
+.pc.expanded::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 10px; margin: 15px 0; }
+.pc.expanded::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+/* Ensure hover doesn't fight the animation */
+.pc.expanded:hover { transform: translate(-50%, -50%) scale(1) !important; box-shadow: 0 12px 40px rgba(239,68,68,.08); }
+.pc.expanded .pc-hover-img { display: none; }
+
+/* Expanded Details Content */
+.pc-details { display: none; margin-top: 1.5rem; border-top: 1px solid var(--card-border); padding-top: 1.5rem; }
+/* Delay the content fade-in so it appears smoothly after the card flips */
+.pc.expanded .pc-details { display: block; animation: fadeIn 0.4s ease forwards 0.3s; opacity: 0; }
+.pc-gallery { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+.pc-gallery img { width: 100%; border-radius: var(--radius); border: 1px solid var(--card-border); }
+.pc-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+/* Close Button */
+.pc-close { position: absolute; top: 1.5rem; right: 1.5rem; background: rgba(239,68,68,0.1); border: 1px solid var(--primary); color: var(--text); font-size: 1.2rem; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; transition: 0.3s; z-index: 10; }
+.pc-close:hover { background: var(--primary); color: #fff; transform: rotate(90deg); }
+.pc.expanded .pc-close { display: flex; animation: fadeIn 0.3s ease forwards 0.4s; opacity: 0; }
+
+@keyframes fadeIn { 
+  from { opacity: 0; transform: translateY(15px); } 
+  to { opacity: 1; transform: translateY(0); } 
+}
+
+
+
+
+
+
 </style>
 </head>
 <body>
-<canvas id="bg-canvas"></canvas>
+<div id="universe-container">
+  <canvas id="bg-canvas" class="front"></canvas>
+  <canvas id="bg-canvas-back" class="back"></canvas>
+</div>
 <div id="pl"><img src="loader.gif" width="100"></div>
 <div id="bat"><img id="bat-img" src=""></div>
+
+<!-- MOBILE OPTIMIZATION NOTICE -->
+<div id="mobile-notice">
+  <p><strong>Desktop Recommended</strong><br>This portfolio features intensive WebGL graphics optimized for larger screens.</p>
+  <button onclick="document.getElementById('mobile-notice').classList.remove('show')"><i class="fa-solid fa-xmark"></i></button>
+</div>
 <!-- ADD THE CLOCK HERE -->
 <div id="doomsday-clock" class="h">
   <div class="dd-lbl">SYSTEM COLLAPSE IN</div>
@@ -273,19 +490,233 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
   </div>
 </section>
 
+<div id="proj-overlay" onclick="closeAllProjects()"></div>
+
 <section id="proj">
   <div class="ct">
     <p class="section-label">What I've Built</p>
     <h2 class="section-title">Projects</h2>
     <div class="grid2">
-      <div class="pc"><div class="pi">🧵</div><h3>Twinin.AI - Virtual Try-On</h3><div class="pt"><span>FastAPI</span><span>React</span><span>ComfyUI</span><span>ControlNet</span><span>IP-Adapter</span></div><p class="pd">3-tier GenAI system running latent diffusion locally for fabric draping and lighting simulation. Async FIFO GPU queue with WebSocket sync prevents OOM crashes on constrained VRAM.</p><div class="pl"><a href="https://github.com/dinnerboneA/Twinin.AI-Virtual-Try-On-FYP" target="_blank">GitHub →</a></div></div>
-      <div class="pc"><div class="pi">⚡</div><h3>Real-Time Data Pipeline</h3><div class="pt"><span>Rust</span><span>Tokio</span><span>Criterion.rs</span><span>SSE</span><span>IPC</span></div><p class="pd">High-velocity SSE ingestion pipeline with zero-copy memory management, stack allocation, and priority-aware MPSC channels for backpressure handling.</p><div class="pl"><a href="https://github.com/dinnerboneA" target="_blank">GitHub →</a></div></div>
-      <div class="pc"><div class="pi">☁️</div><h3>Cloud Microservices Architecture</h3><div class="pt"><span>AWS Lambda</span><span>API Gateway</span><span>SNS</span><span>S3</span><span>X-Ray</span></div><p class="pd">Refactored legacy monolith into serverless AWS microservices. Event-driven flows, presigned S3 uploads, and distributed tracing via X-Ray and CloudWatch.</p><div class="pl"><a href="https://github.com/dinnerboneA" target="_blank">GitHub →</a></div></div>
-      <div class="pc"><div class="pi">📷</div><h3>License Plate Recognition</h3><div class="pt"><span>Python</span><span>OpenCV</span><span>EasyOCR</span><span>CustomTkinter</span></div><p class="pd">End-to-end LPR using classical CV (CLAHE, morphology, contours). Deterministic prefix-lookup for multi-line state classification. Concurrent GUI with daemon threading.</p><div class="pl"><a href="https://github.com/dinnerboneA" target="_blank">GitHub →</a></div></div>
-      <div class="pc"><div class="pi">🔐</div><h3>Distributed HRM System</h3><div class="pt"><span>Java RMI</span><span>SSL/TLS</span><span>MySQL</span><span>Multithreading</span></div><p class="pd">Secure client-server architecture with TLS encryption and multithreaded concurrency. Evaluated enterprise middleware technologies.</p><div class="pl"><a href="https://github.com/dinnerboneA/HR-Management-System-RMI" target="_blank">GitHub →</a></div></div>
-      <div class="pc"><div class="pi">🔍</div><h3>Algorithmic Recommendation Engine</h3><div class="pt"><span>Heaps</span><span>Inverted Indexes</span><span>Big-O</span><span>Optimization</span></div><p class="pd">Real-time book recommendation architecture with hybrid data structures for sub-linear search. Heuristic collaborative filtering with off-peak caching strategies.</p><div class="pl"><a href="https://github.com/dinnerboneA" target="_blank">GitHub →</a></div></div>
-      <div class="pc"><div class="pi">🎨</div><h3>UX Research &amp; Prototyping</h3><div class="pt"><span>Figma</span><span>HTA</span><span>DECIDE</span><span>WCAG</span><span>Fitts' Law</span></div><p class="pd">End-to-end UX for a mobile navigation app: parallel wireframes to hi-fi Figma prototype. User research via HTA, persona development, and heuristic expert reviews.</p><div class="pl"><a href="https://github.com/dinnerboneA" target="_blank">GitHub →</a></div></div>
-      <div class="pc"><div class="pi">🛡️</div><h3>Tech Strategy &amp; Risk Analysis</h3><div class="pt"><span>XDR</span><span>NIST AI RMF</span><span>EU AI Act</span><span>IP Strategy</span></div><p class="pd">Evaluated enterprise cybersecurity platforms and AI behavioral analytics. Mapped compliance against EU AI Act, NIST AI RMF, and SEC disclosure rules.</p><div class="pl"><a href="https://github.com/dinnerboneA" target="_blank">GitHub →</a></div></div>
+      
+      <!-- PROJECT 1: Twinin.AI -->
+      <div class="pc" onclick="openProject(this)">
+        <button class="pc-close" onclick="closeAllProjects(event)"><i class="fa-solid fa-xmark"></i></button>
+        <div class="pi"><img src="Assets/icon-ai.png" alt="Icon" style="width:1.5rem; height:1.5rem; object-fit:contain;"></div>
+        <h3>Twinin.AI - Virtual Try-On</h3>
+        <div class="pt"><span>Generative AI</span><span>ComfyUI</span><span>FastAPI</span><span>React</span><span>WebSockets</span></div>
+        
+        <div class="pc-hover-img"><img src="Assets/preview1.jpg" alt="Hover Preview"></div>
+        <p class="pd">Engineered a localized Virtual Try-On (VTON) web application leveraging Generative AI to simulate fabric draping and lighting.</p>
+        
+        <div class="pc-details">
+          <div class="pc-gallery">
+            <img src="Assets/full-screenshot1.jpg" alt="Twinin.AI Interface">
+            <img src="Assets/full-screenshot1.1.png" alt="Twinin.AI Interface">
+          </div>
+          <div class="pd" style="margin-bottom: 1.5rem;">
+            <ul style="margin-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+              <li>Architected a decoupled 3-tier system using React, FastAPI, and a headless ComfyUI backend to execute AI models locally for data privacy.</li>
+              <li>Designed and implemented an asynchronous FIFO queue system to serialize heavy GPU rendering tasks, preventing OOM crashes on constrained VRAM.</li>
+              <li>Integrated advanced diffusion control nodes (ControlNet for spatial/pose conditioning and IP-Adapter for visual semantic transfer).</li>
+              <li>Developed real-time frontend polling mechanisms via HTTP/WebSockets to maintain seamless UI state synchronization.</li>
+              <li>Applied Agile (Scrum) methodologies and conducted mixed-method user research to drive software requirements and UX design.</li>
+            </ul>
+          </div>
+          <div class="pc-links">
+            <a href="https://github.com/dinnerboneA/Twinin.AI-Virtual-Try-On-FYP" class="btn btn-primary" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+            <a href="#" class="btn btn-outline" target="_blank"><i class="fa-solid fa-link"></i> Live Site</a>
+            <a href="#" class="btn btn-outline" target="_blank"><i class="fa-solid fa-play"></i> Watch Demo</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 2: Real-Time Data Pipeline -->
+      <div class="pc" onclick="openProject(this)">
+        <button class="pc-close" onclick="closeAllProjects(event)"><i class="fa-solid fa-xmark"></i></button>
+        <div class="pi"><img src="Assets/real-time.png" alt="Icon" style="width:1.5rem; height:1.5rem; object-fit:contain;"></div>
+        <h3>Real-Time Data Pipeline</h3>
+        <div class="pt"><span>Rust</span><span>Tokio</span><span>SSE</span><span>IPC</span><span>Multithreading</span></div>
+        
+        <div class="pc-hover-img"><img src="Assets/RTS system architecture.png" alt="Hover Preview"></div>
+        <p class="pd">Engineered a high-velocity, real-time data ingestion pipeline in Rust capable of processing live Server-Sent Events (SSE).</p>
+        
+        <div class="pc-details">
+          <div class="pc-gallery">
+            <img src="Assets/RTS system architecture.png" alt="Pipeline Architecture">
+            <img src="Assets/dynamic degraded mode logic.png" alt="Degraded Mode Logic">
+            <img src="Assets/Synchronous hot path benchmark.png" alt="Benchmark">
+            <img src="Assets/Asynchronous Tokio hot path benchmark.png" alt="Benchmark">
+          </div>
+          <div class="pd" style="margin-bottom: 1.5rem;">
+            <ul style="margin-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+              <li>Implemented zero-copy memory management and stack allocation strategies to eliminate non-deterministic garbage collection pauses.</li>
+              <li>Designed priority-aware IPC using bounded MPSC channels to manage network backpressure, dynamically prioritizing critical traffic.</li>
+              <li>Architected dynamic fail-safe mechanisms and asynchronous watchdog timers to trigger degraded operational modes during deadline violations.</li>
+              <li>Benchmarked and evaluated the latency trade-offs between OS-level synchronous multithreading and Tokio asynchronous runtimes.</li>
+            </ul>
+          </div>
+          <div class="pc-links">
+            <a href="https://github.com/dinnerboneA" class="btn btn-primary" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 3: Distributed HRM System -->
+      <div class="pc" onclick="openProject(this)">
+        <button class="pc-close" onclick="closeAllProjects(event)"><i class="fa-solid fa-xmark"></i></button>
+        <div class="pi"><img src="Assets/Distributed System icon.png" alt="Icon" style="width:1.5rem; height:1.5rem; object-fit:contain;"></div>
+        <h3>Distributed HRM System</h3>
+        <div class="pt"><span>Java RMI</span><span>TCP/IP</span><span>SSL/TLS</span><span>MySQL</span></div>
+        
+        <div class="pc-hover-img"><img src="Assets/System Architecture HRM Distributed Application.png" alt="Hover Preview"></div>
+        <p class="pd">Architected a secure, distributed Human Resource Management system utilizing a client-server model powered by Java RMI.</p>
+        
+        <div class="pc-details">
+          <div class="pc-gallery">
+            <img src="Assets/System Architecture HRM Distributed Application.png" alt="HRM Interface">
+            <img src="Assets/HR Portal DCOMS.png" alt="HRM Interface">
+            <img src="Assets/HR Portal 2.png" alt="HRM Interface">
+            <img src="Assets/Employee Portal.png" alt="HRM Interface">
+            <img src="Assets/Protocol Stack Diagram Client and Server Communication Layers.png" alt="HRM Interface">
+            <img src="Assets/Use Case Diagram DCOMS.png" alt="HRM Interface">
+          </div>
+          <div class="pd" style="margin-bottom: 1.5rem;">
+            <ul style="margin-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+              <li>Secured network communications by implementing SSL/TLS encryption protocols over TCP for safe data transmission.</li>
+              <li>Applied object-oriented principles and implemented multithreading to handle concurrent client requests and power a background polling dashboard.</li>
+              <li>Utilized object serialization to map and transfer complex data objects across network boundaries.</li>
+              <li>Conducted comparative research on enterprise middleware technologies (CORBA, COM, WCF, MOM) to justify architectural design choices.</li>
+            </ul>
+          </div>
+          <div class="pc-links">
+            <a href="https://github.com/dinnerboneA/HR-Management-System-RMI" class="btn btn-primary" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 4: Cloud Microservices -->
+      <div class="pc" onclick="openProject(this)">
+        <button class="pc-close" onclick="closeAllProjects(event)"><i class="fa-solid fa-xmark"></i></button>
+        <div class="pi"><img src="Assets/AWS_Simple_Icons_AWS_Cloud.png" alt="Icon" style="width:1.5rem; height:1.5rem; object-fit:contain;"></div>
+        <h3>Cloud Microservices Architecture</h3>
+        <div class="pt"><span>AWS Lambda</span><span>API Gateway</span><span>S3</span><span>SNS</span><span>X-Ray</span></div>
+        
+        <div class="pc-hover-img"><img src="Assets/Accessibility Services Portal login page.png" alt="Hover Preview"></div>
+        <p class="pd">Refactored a legacy monolithic web application into a decoupled, serverless microservices architecture.</p>
+        
+        <div class="pc-details">
+          <div class="pc-gallery">
+            <img src="Assets/Accessibility Services Portal login page.png" alt="Portal Login">
+            <img src="Assets/AWS Cloud Architecture diagram.png" alt="Architecture Diagram">
+          </div>
+          <div class="pd" style="margin-bottom: 1.5rem;">
+            <ul style="margin-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+              <li>Resolved critical I/O bottlenecks and thread pool exhaustion by migrating to a decoupled serverless environment.</li>
+              <li>Engineered event-driven data flows using AWS API Gateway, Lambda, and SNS for automated backend processing and notifications.</li>
+              <li>Implemented direct-to-S3 uploads utilizing cryptographic presigned URLs, offloading heavy data streaming from the primary compute server.</li>
+              <li>Integrated AWS X-Ray and CloudWatch Application Signals to profile system telemetry, trace distributed requests, and optimize latency.</li>
+            </ul>
+          </div>
+          <div class="pc-links">
+            <a href="https://github.com/dinnerboneA" class="btn btn-primary" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+            <a href="https://main.d46qgve16lbs3.amplifyapp.com/" class="btn btn-outline" target="_blank"><i class="fa-solid fa-link"></i> Live Site</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 5: Algorithmic Recommendation Engine -->
+      <div class="pc" onclick="openProject(this)">
+        <button class="pc-close" onclick="closeAllProjects(event)"><i class="fa-solid fa-xmark"></i></button>
+        <div class="pi"><img src="Assets/Algorithmic icon.png" alt="Icon" style="width:1.5rem; height:1.5rem; object-fit:contain;"></div>
+        <h3>Algorithmic Recommendation Engine</h3>
+        <div class="pt"><span>Data Structures</span><span>Big-O</span><span>Optimization</span></div>
+        
+        <div class="pc-hover-img"><img src="Assets/ALGO5.png" alt="Hover Preview"></div>
+        <p class="pd">Designed a highly scalable, real-time book recommendation and retrieval architecture capable of handling high-frequency operations.</p>
+        
+        <div class="pc-details">
+          <div class="pc-gallery">
+            <img src="Assets/ALGO5.png" alt="Algorithm Flow">
+            <img src="Assets/ALGO1.png" alt="Algorithm Flow">
+            <img src="Assets/ALGO4.png" alt="Algorithm Flow">
+            <img src="Assets/ALGO2.png" alt="Algorithm Flow">
+            <img src="Assets/ALGO3.png" alt="Algorithm Flow">
+          </div>
+          <div class="pd" style="margin-bottom: 1.5rem;">
+            <ul style="margin-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+              <li>Optimized system performance from linear to sub-linear time complexities by deploying hybrid data structures (Inverted Indexes, Min-Heaps).</li>
+              <li>Applied computational complexity theory to classify operations as P or NP-hard.</li>
+              <li>Developed heuristic collaborative-filtering algorithms and off-peak caching strategies to bypass NP-hard combinatorial bottlenecks.</li>
+            </ul>
+          </div>
+          <div class="pc-links">
+            <a href="https://github.com/dinnerboneA" class="btn btn-primary" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 6: License Plate Recognition -->
+      <div class="pc" onclick="openProject(this)">
+        <button class="pc-close" onclick="closeAllProjects(event)"><i class="fa-solid fa-xmark"></i></button>
+        <div class="pi"><img src="Assets/Computer Vision Icon2.png" alt="Icon" style="width:1.5rem; height:1.5rem; object-fit:contain;"></div>
+        <h3>License Plate Recognition</h3>
+        <div class="pt"><span>Python</span><span>OpenCV</span><span>EasyOCR</span><span>CustomTkinter</span></div>
+        
+        <div class="pc-hover-img"><img src="Assets/License-Plate-Recognition.png" alt="Hover Preview"></div>
+        <p class="pd">Developed an end-to-end vehicle License Plate Recognition (LPR) and State Identification System utilizing classical computer vision.</p>
+        
+        <div class="pc-details">
+          <div class="pc-gallery">
+            <img src="Assets/Plate Detection 1.png" alt="Detection Frame 1">
+            <img src="Assets/Plate Detection 2.png" alt="Detection Frame 2">
+            <img src="Assets/Plate Detection 3.png" alt="Detection Frame 3">
+          </div>
+          <div class="pd" style="margin-bottom: 1.5rem;">
+            <ul style="margin-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+              <li>Engineered an image processing pipeline for region localization utilizing CLAHE contrast enhancement, morphological operations, and contours.</li>
+              <li>Processed localized crops using EasyOCR through a multi-variant strategy (adaptive thresholding, inversion) to extract alphanumeric data.</li>
+              <li>Designed a deterministic prefix lookup algorithm with longest-first extraction to classify state jurisdictions and handle multi-line ambiguity.</li>
+              <li>Built a concurrent desktop GUI utilizing CustomTkinter with daemon threading to prevent UI blocking during heavy matrix operations.</li>
+            </ul>
+          </div>
+          <div class="pc-links">
+            <a href="https://github.com/dinnerboneA/License-Plate-Recognition" class="btn btn-primary" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 7: UX/UI Research -->
+      <div class="pc" onclick="openProject(this)">
+        <button class="pc-close" onclick="closeAllProjects(event)"><i class="fa-solid fa-xmark"></i></button>
+        <div class="pi"><img src="Assets/HCI icon.png" alt="Icon" style="width:1.5rem; height:1.5rem; object-fit:contain;"></div>
+        <h3>UX Research & Prototyping</h3>
+        <div class="pt"><span>Figma</span><span>Wireframing</span><span>Usability Testing</span><span>HTA</span></div>
+        
+        <div class="pc-hover-img"><img src="Assets/HCI 1.png" alt="Hover Preview"></div>
+        <p class="pd">Led the end-to-end UX design for an interactive mobile navigation application, progressing from wireframes to hi-fi prototypes.</p>
+        
+        <div class="pc-details">
+          <div class="pc-gallery">
+            <img src="Assets/HCI 1.png" alt="Figma Prototype">
+            <img src="Assets/HCI 2 Suggested Information Architecture.png" alt="Figma Prototype">
+            <img src="Assets/HCI 3.png" alt="Figma Prototype">
+            <img src="Assets/HCI 4.png" alt="Figma Prototype">
+            <img src="Assets/HCI 5.png" alt="Figma Prototype">
+          </div>
+          <div class="pd" style="margin-bottom: 1.5rem;">
+            <ul style="margin-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+              <li>Authored an academic analysis on mobile UI challenges, focusing on spatial constraints, Fitts’ Law target accuracy, and WCAG compliance.</li>
+              <li>Conducted comprehensive user research using Hierarchical Task Analysis (HTA), persona development, and Mendelow’s matrix.</li>
+              <li>Executed formative UX evaluations applying the DECIDE framework, including heuristic expert reviews and usability testing.</li>
+            </ul>
+          </div>
+          <div class="pc-links">
+            <a href="https://github.com/dinnerboneA" class="btn btn-primary" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+          </div>
+        </div>
+      </div>
+
+
     </div>
   </div>
 </section>
@@ -476,6 +907,13 @@ function applyDevourEffect(){
 
   // === Render ===
   function draw(ts){
+    // --- PERFORMANCE OPTIMIZATION: Stop rendering if off-screen ---
+    var rect = cvs.getBoundingClientRect();
+    if (rect.right <= 0 || rect.left >= window.innerWidth) {
+      requestAnimationFrame(draw);
+      return; 
+    }
+
     time=ts*0.001;
 
     // Smooth cursor tracking (Locks center and disables speed-up on mobile)
@@ -825,6 +1263,13 @@ var ENABLE_DEVOUR_ON_MOBILE = false;
 // Idle timer check
 setInterval(function(){
   if(document.hidden||!document.hasFocus())return;
+  
+  // Stop the Devour effect from triggering if we are in the Projects section
+  if(typeof isViewingProjects !== 'undefined' && isViewingProjects) {
+    lastActivity = Date.now(); // Continually freeze the timer
+    return;
+  }
+  
   var elapsed=(Date.now()-lastActivity)/1000;
   idleCounter=elapsed;
   if(idleCounter>=idleThreshold&&!devouring){
@@ -954,7 +1399,10 @@ function resetBat(e){
   // Update spawn coordinates only if the event has a mouse/touch position
   if(e && e.clientX !== undefined){ lmx=e.clientX; lmy=e.clientY; }
   
-  if(bActive) hb(); // Hides the bat (which automatically triggers the clock rewind)
+  if(bActive) hb(); // Hides the bat (which automatically triggers the clock fade-out)
+  
+  // Prevent the bat and clock from spawning if we are in the Projects section
+  if(typeof isViewingProjects !== 'undefined' && isViewingProjects) return;
   
   cto=setTimeout(()=>sb(lmx,lmy),IDLE);
 }
@@ -1068,6 +1516,363 @@ function updateDoomsdayClock() {
 }
 // Boot up the continuous clock loop
 requestAnimationFrame(updateDoomsdayClock);
+
+
+
+
+
+// ===== PROJECT CARD MODAL LOGIC =====
+function openProject(card) {
+  if (card.classList.contains('expanded')) return;
+  document.getElementById('proj-overlay').classList.add('active');
+  card.classList.add('expanded');
+  document.body.style.overflow = "hidden"; // Prevent background scrolling
+  
+  // FIX: Instantly clear the hover blurs from other cards so they don't get frozen
+  document.querySelectorAll('.pc').forEach(function(c) {
+    c.style.filter = '';
+    c.style.opacity = '';
+    c.style.transform = '';
+  });
+}
+
+function closeAllProjects(event) {
+  if (event) event.stopPropagation(); // Stop click from immediately re-opening
+  
+  const activeCards = document.querySelectorAll('.pc.expanded:not(.closing)');
+  if (activeCards.length === 0) return;
+
+  // Instantly start fading out the dark background overlay
+  document.getElementById('proj-overlay').classList.remove('active');
+  document.body.style.overflow = ""; // Restore background scrolling
+
+  activeCards.forEach(card => {
+    // 1. Trigger the reverse 3D flip animation
+    card.classList.add('closing');
+    
+    // 2. Wait exactly 400ms for the animation to finish before resetting the DOM
+    setTimeout(() => {
+      card.classList.remove('expanded', 'closing');
+      
+      // Forcefully reset the grid blurs to guarantee a clean slate
+      document.querySelectorAll('.pc').forEach(function(c) {
+        c.style.filter = '';
+        c.style.opacity = '';
+        c.style.transform = '';
+      });
+    }, 400); 
+  });
+}
+
+
+// ===== 3D BACKGROUND TURNAROUND TRIGGER =====
+var isViewingProjects = false; // Global flag to disable Devour and Clock
+
+document.addEventListener("DOMContentLoaded", () => {
+  const projSection = document.getElementById('proj');
+  const universe = document.getElementById('universe-container');
+  
+  if (projSection && universe) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Entering Projects: Flip universe, set flag, and force-hide the Bat/Clock
+          universe.classList.add('turned-around');
+          isViewingProjects = true;
+          if (typeof hb === 'function') hb(); 
+          if (typeof resetIdle === 'function') resetIdle();
+        } else {
+          // Leaving Projects: Revert universe, lower flag, restart timers
+          universe.classList.remove('turned-around');
+          isViewingProjects = false;
+          if (typeof resetBat === 'function') resetBat();
+        }
+      });
+    }, { threshold: 0.15 }); 
+    
+    observer.observe(projSection);
+  }
+});
+
+
+// ===== PROJECT CARD HOVER BLUR =====
+document.querySelectorAll('.pc').forEach(function(card) {
+  card.addEventListener('mouseenter', function() {
+    if (document.querySelector('.pc.expanded')) return; // Disable hover effects if a card is open
+    document.querySelectorAll('.pc').forEach(function(c) {
+      if (c !== card) {
+        c.style.filter = 'blur(5px)';
+        c.style.opacity = '0.5';
+        c.style.transform = 'scale(0.98)';
+      }
+    });
+  });
+  card.addEventListener('mouseleave', function() {
+    if (document.querySelector('.pc.expanded')) return;
+    document.querySelectorAll('.pc').forEach(function(c) {
+      c.style.filter = '';
+      c.style.opacity = '';
+      c.style.transform = '';
+    });
+  });
+});
+
+
+
+// ===== CINEMATIC 3D BLACK HOLE (BACK FACE) =====
+(function(){
+  var cvs = document.getElementById("bg-canvas-back");
+  if(!cvs) return;
+  var gl = cvs.getContext("webgl") || cvs.getContext("experimental-webgl");
+  if(!gl) return;
+
+  function resize() {
+    // PERFORMANCE FIX: Render at a lower internal resolution and let CSS upscale it.
+    // Drops GPU pixel calculation by 60% on desktop and 80% on mobile.
+    var pixelRatio = window.innerWidth < 768 ? 0.35 : 0.6;
+    cvs.width = window.innerWidth * pixelRatio;
+    cvs.height = window.innerHeight * pixelRatio;
+    
+    // Stretch the canvas to fill the screen visually
+    cvs.style.width = window.innerWidth + "px";
+    cvs.style.height = window.innerHeight + "px";
+    
+    gl.viewport(0, 0, cvs.width, cvs.height);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  var vsSource = `
+    attribute vec2 position;
+    void main() { gl_Position = vec4(position, 0.0, 1.0); }
+  `;
+
+  var fsSource = `
+    precision highp float;
+    uniform vec2 u_res;
+    uniform float u_time;
+    uniform vec2 u_mouse;
+    uniform float u_light; // Added for Light Mode toggle
+
+    mat2 rot(float a) {
+        float s = sin(a), c = cos(a);
+        return mat2(c, -s, s, c);
+    }
+
+    // High-quality 3D hash for natural, randomized star generation
+    float hash31(vec3 p3) {
+        p3  = fract(p3 * 0.1031);
+        p3 += dot(p3, p3.yzx + 33.33);
+        return fract((p3.x + p3.y) * p3.z);
+    }
+
+    // 2D hash for noise and static ray dithering
+    float hash21(vec2 p) {
+        return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+    }
+
+    float noise(vec2 p) {
+        vec2 i = floor(p), f = fract(p);
+        vec2 u = f*f*(3.0-2.0*f);
+        return mix(mix(hash21(i), hash21(i+vec2(1.0,0.0)), u.x),
+                   mix(hash21(i+vec2(0.0,1.0)), hash21(i+vec2(1.0,1.0)), u.x), u.y);
+    }
+
+    float fbm(vec2 p) {
+        float f = 0.0;
+        f += 0.5000 * noise(p); p *= 2.02;
+        f += 0.2500 * noise(p); p *= 2.03;
+        f += 0.1250 * noise(p); 
+        // PERFORMANCE FIX: Removed the 4th octave computation for massive speedup
+        return f;
+    }
+
+    void main() {
+        vec2 uv = (gl_FragCoord.xy - 0.5 * u_res.xy) / min(u_res.x, u_res.y);
+        
+        // Perspective shifts (Top Right)
+        uv.x -= 0.45;
+        uv.y -= 0.15; 
+        
+        vec3 ro = vec3(0.0, 0.0, -5.5);
+        vec3 rd = normalize(vec3(uv, 1.3)); 
+        
+        float dt = 0.07; // PERFORMANCE FIX: Larger steps through space
+        
+        // STATIC DITHERING: Offset the ray's starting position based ONLY on pixel coordinates.
+        // This eliminates Moire patterns/banding without causing the TV-static flicker.
+        float dither = hash21(gl_FragCoord.xy) * dt;
+        vec3 p = ro + rd * dither;
+        
+        float r = 0.0;
+        float GM = 0.4; 
+        float eh = 0.45; 
+        
+        float disk = 0.0;
+        float glow = 0.0;
+        bool hit_black_hole = false;
+        
+        vec2 m = u_mouse; 
+        
+        // PERFORMANCE FIX: Halved the maximum ray steps from 260 to 130
+        for(int i = 0; i < 130; i++) {
+            r = length(p);
+            
+            // If the ray falls into the black hole, stop marching.
+            if(r < eh) {
+                hit_black_hole = true;
+                break;
+            }
+            
+            // Relativistic Gravity (Warping the ray)
+            vec3 force = -p / (r * r * r) * GM;
+            rd = normalize(rd + force * dt);
+            p += rd * dt;
+            
+            vec3 dp = p;
+            
+            // Orientation Tilt
+            dp.yz *= rot(0.28); 
+            dp.xy *= rot(-0.65); 
+            
+            // Mouse Interaction (Subtle disk rotation)
+            dp.yz *= rot(-m.y * 0.15);
+            dp.xz *= rot(m.x * 0.15);
+            
+            float distToPlane = abs(dp.y);
+            float distFromCenter = length(dp.xz);
+            
+            if(distToPlane < 0.08 && distFromCenter > eh * 1.5 && distFromCenter < 4.5) {
+                float angle = atan(dp.z, dp.x);
+                float speed = 0.5 / sqrt(distFromCenter); 
+                float t = u_time * speed;
+                
+                float spiral = fbm(vec2(distFromCenter * 5.0, angle * 3.0 - t));
+                float fine = fbm(vec2(distFromCenter * 15.0, angle * 10.0 - t * 2.0));
+                
+                float density = smoothstep(0.08, 0.0, distToPlane) * (spiral * 0.6 + fine * 0.4);
+                density *= smoothstep(4.5, 2.0, distFromCenter); 
+                density *= smoothstep(eh * 1.5, eh * 2.0, distFromCenter); 
+                
+                float doppler = 1.2 + sin(angle + 0.8) * 1.0; 
+                disk += density * 0.06 * doppler;
+            }
+            
+            // Photon ring corona
+            if (r > eh * 1.45 && r < eh * 1.55) {
+                glow += 0.0015 / (abs(r - eh * 1.5) + 0.01);
+            }
+        }
+        
+        vec3 col = vec3(0.0);
+        float star_brightness = 0.0;
+        
+        // Background Stars calculation
+        if (!hit_black_hole) {
+            float s = hash31(rd * 300.0);
+            float star_base = smoothstep(0.9985, 1.0, s);
+            float variation = hash31(rd * 150.0);
+            star_brightness = star_base * (0.1 + 0.9 * variation * variation * variation) * 3.0;
+        }
+
+        // --- THEME COLOR MAPPING ---
+        if (u_light > 0.5) {
+            // LIGHT MODE
+            vec3 bg = vec3(0.945, 0.961, 0.976); // Light slate space
+            vec3 bh = vec3(0.059, 0.090, 0.165); // Dark slate black hole
+            vec3 dust_color = vec3(0.392, 0.455, 0.545); // Medium slate dust
+            vec3 star_color = vec3(0.278, 0.333, 0.412); // Dark slate stars
+            
+            col = hit_black_hole ? bh : bg;
+            
+            // Add stars masked by the dust
+            if (!hit_black_hole) {
+                float masked_star = star_brightness * (1.0 - min(disk * 2.5, 1.0));
+                col = mix(col, star_color, clamp(masked_star, 0.0, 1.0));
+            }
+            
+            // Add dust and glow
+            float dust_density = clamp((disk * 2.5) + (glow * 0.4), 0.0, 1.0);
+            col = mix(col, dust_color, dust_density);
+
+        } else {
+            // DARK MODE (Exactly as you provided)
+            if (!hit_black_hole) {
+                col += vec3(star_brightness) * (1.0 - min(disk * 2.5, 1.0)); 
+            }
+            col += vec3(glow * 0.4); 
+            col += vec3(disk * 2.5); 
+            
+            col = col / (1.0 + col);
+            col = pow(col, vec3(0.8));
+        }
+        
+        gl_FragColor = vec4(col, 1.0);
+    }
+  `;
+
+  function compile(type, src) {
+    var s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+
+  var prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, vsSource));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fsSource));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+
+  var pos = gl.getAttribLocation(prog, "position");
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+  var uRes = gl.getUniformLocation(prog, "u_res");
+  var uTime = gl.getUniformLocation(prog, "u_time");
+  var uMouse = gl.getUniformLocation(prog, "u_mouse");
+  var uLight = gl.getUniformLocation(prog, "u_light"); // Bind the Light Mode Uniform
+
+  var tgtMx = 0, tgtMy = 0, mx = 0, my = 0;
+
+  document.addEventListener("mousemove", function(e) {
+    if (window.innerWidth < 768) return;
+    tgtMx = ((e.clientX / window.innerWidth) - 0.5) * 2.0;
+    tgtMy = ((e.clientY / window.innerHeight) - 0.5) * 2.0;
+  });
+
+  var start = performance.now();
+  function draw(t) {
+    // --- PERFORMANCE OPTIMIZATION: Stop rendering if off-screen ---
+    var rect = cvs.getBoundingClientRect();
+    if (rect.right <= 0 || rect.left >= window.innerWidth) {
+      requestAnimationFrame(draw);
+      return; 
+    }
+
+    mx += (tgtMx - mx) * 0.05;
+    my += (tgtMy - my) * 0.05;
+    
+    // Check if the HTML tag has the light mode class
+    var isLight = document.documentElement.classList.contains("light") ? 1.0 : 0.0;
+    
+    gl.uniform2f(uRes, cvs.width, cvs.height);
+    gl.uniform1f(uTime, (t - start) * 0.001);
+    gl.uniform2f(uMouse, mx, my);
+    gl.uniform1f(uLight, isLight); // Pass state to shader
+    
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+
+
 
 
 
