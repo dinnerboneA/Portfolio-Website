@@ -1278,12 +1278,24 @@ setInterval(function(){
     startDevour();
   }
 },1000);
-const pl2=document.getElementById("pl");
-function hidePreloader(){if(pl2)pl2.classList.add("h")}
+const pl2 = document.getElementById("pl");
+
+function hidePreloader() {
+  if (pl2) pl2.classList.add("h");
+  
+  // Display the mobile warning 0.5 seconds after the loading screen fades away
+  if (window.innerWidth < 768) {
+    setTimeout(() => {
+      var notice = document.getElementById('mobile-notice');
+      if (notice) notice.classList.add('show');
+    }, 500);
+  }
+}
+
 // Always hide within 4 seconds max, even if something fails
-setTimeout(hidePreloader,4000);
+setTimeout(hidePreloader, 4000);
 // Also hide on window load
-window.addEventListener("load",hidePreloader);
+window.addEventListener("load", hidePreloader);
 // Hero animations after load
 window.addEventListener("load",()=>{
   setTimeout(()=>{
