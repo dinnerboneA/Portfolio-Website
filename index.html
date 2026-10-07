@@ -195,7 +195,8 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
   transform: translateX(-50%) translateY(250%);
   opacity: 0;
   visibility: hidden;
-  background: rgba(10, 10, 30, 0.95);
+  /* FIX: Automatically adapts background color based on Dark/Light mode */
+  background: var(--card); 
   border: 1px solid var(--primary);
   border-radius: var(--radius);
   padding: 0.8rem 1.2rem;
@@ -1816,6 +1817,13 @@ document.querySelectorAll('.pc').forEach(function(card) {
         }
 
         // --- THEME COLOR MAPPING ---
+        
+        // FIX: OLED Static Noise Floor
+        // Dithering creates microscopic fractional values of glow/disk even in the empty void.
+        // By subtracting a tiny 0.015 threshold, we force the empty space to pure 0.0 true black.
+        disk = max(disk - 0.015, 0.0);
+        glow = max(glow - 0.015, 0.0);
+
         if (u_light > 0.5) {
             // LIGHT MODE
             vec3 bg = vec3(0.945, 0.961, 0.976); // Light slate space
@@ -1836,10 +1844,11 @@ document.querySelectorAll('.pc').forEach(function(card) {
             col = mix(col, dust_color, dust_density);
 
         } else {
-            // DARK MODE (Exactly as you provided)
+            // DARK MODE
             if (!hit_black_hole) {
                 col += vec3(star_brightness) * (1.0 - min(disk * 2.5, 1.0)); 
             }
+            
             col += vec3(glow * 0.4); 
             col += vec3(disk * 2.5); 
             
