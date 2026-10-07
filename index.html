@@ -1279,15 +1279,26 @@ setInterval(function(){
   }
 },1000);
 const pl2 = document.getElementById("pl");
+let preloaderHidden = false; // Flag to prevent double-triggering
 
 function hidePreloader() {
+  if (preloaderHidden) return; 
+  preloaderHidden = true;
+  
   if (pl2) pl2.classList.add("h");
   
   // Display the mobile warning 0.5 seconds after the loading screen fades away
   if (window.innerWidth < 768) {
     setTimeout(() => {
       var notice = document.getElementById('mobile-notice');
-      if (notice) notice.classList.add('show');
+      if (notice) {
+        notice.classList.add('show');
+        
+        // Automatically hide it after 5 seconds
+        setTimeout(() => {
+          notice.classList.remove('show');
+        }, 5000);
+      }
     }, 500);
   }
 }
@@ -1866,8 +1877,13 @@ document.querySelectorAll('.pc').forEach(function(card) {
       return; 
     }
 
-    mx += (tgtMx - mx) * 0.05;
-    my += (tgtMy - my) * 0.05;
+    // Forcefully lock the camera panning to zero on mobile to ignore rogue scroll events
+    if (window.innerWidth < 768) {
+      mx = 0; my = 0; tgtMx = 0; tgtMy = 0;
+    } else {
+      mx += (tgtMx - mx) * 0.05;
+      my += (tgtMy - my) * 0.05;
+    }
     
     // Check if the HTML tag has the light mode class
     var isLight = document.documentElement.classList.contains("light") ? 1.0 : 0.0;
