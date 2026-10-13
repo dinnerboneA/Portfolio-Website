@@ -275,7 +275,7 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
   height: 100vh;
   z-index: -2;
   transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s;
-  background-color: #050510; 
+  background-color: #000000; 
 }
 /* Light Mode Background */
 .light #universe-container {
@@ -478,8 +478,8 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
       <a href="#ct" class="btn btn-outline"><i class="fa-solid fa-paper-plane"></i> Contact</a>
     </div>
     <div class="hero-stats">
-      <div class="hero-stat"><div class="num">13+</div><div class="lbl">Projects</div></div>
-      <div class="hero-stat"><div class="num">5</div><div class="lbl">Months XP</div></div>
+      <div class="hero-stat"><div class="num">15+</div><div class="lbl">Projects</div></div>
+      <div class="hero-stat"><div class="num">3+</div><div class="lbl">Years XP</div></div>
       <div class="hero-stat"><div class="num">10+</div><div class="lbl">Technologies</div></div>
     </div>
   </div>
@@ -1647,6 +1647,7 @@ document.querySelectorAll('.pc').forEach(function(card) {
 
 
 
+
 // ===== CINEMATIC 3D BLACK HOLE (BACK FACE) =====
 (function(){
   var cvs = document.getElementById("bg-canvas-back");
@@ -1654,15 +1655,28 @@ document.querySelectorAll('.pc').forEach(function(card) {
   var gl = cvs.getContext("webgl") || cvs.getContext("experimental-webgl");
   if(!gl) return;
 
+  // ==========================================
+  // DEBUG QUALITY CONTROL
+  // Change this single number to adjust overall resolution:
+  // 1.0 = Default High Quality
+  // 0.5 = Half resolution (smooth, fast debugging)
+  // 0.25 = Potato mode (ultra fast, very pixelated)
+  // 2.0 = Supersampled (heavy GPU load, ultra crisp)
+  var DEBUG_QUALITY = 1.5; 
+  var DUST_QUALITY = 2;
+  // ==========================================
+
   var lastMobileW2 = window.innerWidth;
 
   function resize() {
-    // RESTORED QUALITY: Bumped mobile from 0.35 up to 0.75 for crisp high-res rendering
-    var pixelRatio = window.innerWidth < 768 ? 0.75 : 0.8;
+    // Base quality thresholds multiplied by your single debug dial
+    var baseRatio = window.innerWidth < 768 ? 0.75 : 0.8;
+    var pixelRatio = baseRatio * DEBUG_QUALITY;
+    
     cvs.width = window.innerWidth * pixelRatio;
     cvs.height = window.innerHeight * pixelRatio;
     
-    // Stretch the canvas to fill the screen visually
+    // CSS always forces it to fill the screen visually regardless of render resolution
     cvs.style.width = window.innerWidth + "px";
     cvs.style.height = window.innerHeight + "px";
     
@@ -1689,6 +1703,8 @@ document.querySelectorAll('.pc').forEach(function(card) {
 
   var fsSource = `
     precision highp float;
+    #define DUST_QUALITY ${DUST_QUALITY}
+    
     uniform vec2 u_res;
     uniform float u_time;
     uniform vec2 u_mouse;
@@ -1720,10 +1736,15 @@ document.querySelectorAll('.pc').forEach(function(card) {
 
     float fbm(vec2 p) {
         float f = 0.0;
-        f += 0.5000 * noise(p); p *= 2.02;
-        f += 0.2500 * noise(p); p *= 2.03;
-        f += 0.1250 * noise(p); 
-        // PERFORMANCE FIX: Removed the 4th octave computation for massive speedup
+        f += 0.5000 * noise(p); 
+        #if DUST_QUALITY > 1
+            p *= 2.02;
+            f += 0.2500 * noise(p); 
+        #endif
+        #if DUST_QUALITY > 2
+            p *= 2.03;
+            f += 0.1250 * noise(p); 
+        #endif
         return f;
     }
 
@@ -1799,9 +1820,15 @@ document.querySelectorAll('.pc').forEach(function(card) {
                 float t = u_time * speed;
                 
                 float spiral = fbm(vec2(distFromCenter * 5.0, angle * 3.0 - t));
-                float fine = fbm(vec2(distFromCenter * 15.0, angle * 10.0 - t * 2.0));
+                float density;
                 
-                float density = smoothstep(0.08, 0.0, distToPlane) * (spiral * 0.6 + fine * 0.4);
+                #if DUST_QUALITY > 1
+                    float fine = fbm(vec2(distFromCenter * 15.0, angle * 10.0 - t * 2.0));
+                    density = smoothstep(0.08, 0.0, distToPlane) * (spiral * 0.6 + fine * 0.4);
+                #else
+                    // Low quality skips the expensive second noise layer entirely
+                    density = smoothstep(0.08, 0.0, distToPlane) * spiral;
+                #endif
                 density *= smoothstep(4.5, 2.0, distFromCenter); 
                 density *= smoothstep(eh * 1.5, eh * 2.0, distFromCenter); 
                 
@@ -1821,15 +1848,22 @@ document.querySelectorAll('.pc').forEach(function(card) {
         // Background Stars calculation
         if (!hit_black_hole) {
             float s = hash31(rd * 300.0);
-            float star_base = smoothstep(0.9985, 1.0, s);
+            
+            // Adjust the 0.9985 down (e.g., to 0.995) if you want MORE stars total
+            float star_base = smoothstep(0.9990, 1.0, s); 
             float variation = hash31(rd * 150.0);
-            star_brightness = star_base * (0.1 + 0.9 * variation * variation * variation) * 3.0;
+            
+            // The pow() function keeps 99% of stars dim, but pushes the luckiest few to extreme brightness
+            // Increase the "15.0" multiplier to make those rare stars even brighter
+            float super_bright = pow(variation, 30.0) * 90.0; 
+            
+            star_brightness = star_base * (0.2 + variation + super_bright) * 3.5;
         }
 
         // --- THEME COLOR MAPPING ---
         
         disk = max(disk - 0.015, 0.0);
-        glow = max(glow - 0.015, 0.0);
+        glow = max(glow - 0.015, 0.0);  
 
         if (u_light > 0.5) {
             // LIGHT MODE
@@ -1865,10 +1899,10 @@ document.querySelectorAll('.pc').forEach(function(card) {
             col = col / (1.0 + col);
             col = pow(col, vec3(0.8));
             
-            // FORCE OLED PITCH BLACK: Only turn the pixel off if there is no gas and no stars
-            if (length(col) < 0.04) {
-                col = vec3(0.0);
-            }
+            // FORCE OLED PITCH BLACK (SMOOTH): 
+            // Crushes inner noise into pure black smoothly without chopping holes in the accretion disk
+            float brightness = length(col);
+            col *= smoothstep(0.06, 0.15, brightness);
         }
         
         gl_FragColor = vec4(col, 1.0);
