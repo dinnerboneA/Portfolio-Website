@@ -102,6 +102,134 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
 .light .btn-outline{background:rgba(255,255,255,0.7)}
 .btn-outline:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-3px)}
 
+/* ===== FLUID SPACE CV BUTTON (NAVBAR WRAPPER) ===== */
+.fluid-cv-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.2rem;
+  border-radius: 3rem; 
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+  background-color: #050510;
+  z-index: 1;
+}
+
+/* The "Liquid" Gradient Layer */
+.fluid-cv-btn::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(120deg, rgba(239, 68, 68, 0.1), rgba(165, 39, 8, 0.5), rgba(5, 5, 16, 0.9));
+  background-size: 200% 200%;
+  z-index: -2;
+  animation: liquidFlow 4s ease-in-out infinite alternate;
+}
+
+/* The "Suspended Stars" Layer - INCREASED DENSITY */
+.fluid-cv-btn::after {
+  content: "";
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background-image: 
+    radial-gradient(1px 1px at 20% 30%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 70% 60%, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2px 2px at 80% 20%, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 10% 70%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 55% 40%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 90% 85%, rgba(255,255,255,0.5), transparent);
+  z-index: -1;
+  opacity: 0.6;
+  animation: liquidStars 12s linear infinite; 
+}
+
+/* Keeps text above the liquid */
+.fluid-cv-btn span, .fluid-cv-btn i {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 4px rgba(0,0,0,0.8);
+}
+
+/* Hover Effects */
+.fluid-cv-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+  border-color: var(--primary);
+}
+
+.fluid-cv-btn:hover::before {
+  animation: liquidFlow 1.5s ease-in-out infinite alternate;
+  opacity: 0.9;
+}
+.fluid-cv-btn:hover::after {
+  animation: liquidStars 4s linear infinite;
+  opacity: 1;
+}
+
+@keyframes liquidFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+@keyframes liquidStars {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  #nav-wrapper { width: 95%; justify-content: center; }
+  #nav { flex-grow: 1; width: auto !important; }
+  .fluid-cv-btn { padding: 0.5rem 0.85rem; }
+  .fluid-cv-btn span { display: none; } 
+}
+
+/* ========================================= */
+/* LIGHT MODE OPTIMIZATION                   */
+/* ========================================= */
+.light .fluid-cv-btn { 
+  background-color: #fff;
+  color: var(--amber);
+  border-color: rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15);
+}
+.light .fluid-cv-btn span, .light .fluid-cv-btn i {
+  text-shadow: none; /* Remove dark shadow so text is crisp */
+}
+.light .fluid-cv-btn::before {
+  /* Brighter daytime liquid gradient */
+  background: linear-gradient(120deg, rgba(239, 68, 68, 0.05), rgba(249, 115, 22, 0.15), rgba(255, 255, 255, 0.9));
+  background-size: 200% 200%;
+}
+.light .fluid-cv-btn::after {
+  /* Turn the stars into red/orange sparkles for light mode */
+  background-image: 
+    radial-gradient(1px 1px at 20% 30%, var(--secondary), transparent),
+    radial-gradient(1.5px 1.5px at 70% 60%, var(--accent), transparent),
+    radial-gradient(1px 1px at 40% 80%, var(--secondary), transparent),
+    radial-gradient(2px 2px at 80% 20%, var(--accent), transparent),
+    radial-gradient(1px 1px at 10% 70%, var(--secondary), transparent),
+    radial-gradient(1.5px 1.5px at 55% 40%, var(--accent), transparent),
+    radial-gradient(1px 1px at 90% 85%, var(--secondary), transparent);
+  opacity: 0.6;
+}
+.light .fluid-cv-btn:hover {
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+}
+
+
+
+
+
+
 /* ===== GLASS CARD ===== */
 .card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:1.5rem;transition:all .35s;position:relative;overflow:hidden}
 .card::before{content:"";position:absolute;top:0;left:-100%;width:200%;height:1px;background:linear-gradient(90deg,transparent,var(--primary),var(--accent),transparent);transition:left 1s}
@@ -455,18 +583,29 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
   <div class="dd-time" id="dd-time">00:00</div>
 </div>
 
-<nav id="nav">
-  <a href="#" class="logo-btn">&lt;<span id="logo-text">ABF</span>/&gt;</a>
-  <ul class="nav-links">
-    <li><a href="#hero" class="active">Home</a></li>
-    <li><a href="#exp">Exp</a></li>
-    <li><a href="#proj">Projects</a></li>
-    <li><a href="#sk">Skills</a></li>
-    <li><a href="#ach">Achieve</a></li>
-    <li><a href="#ct">Contact</a></li>
-  </ul>
-  <button class="theme-btn" id="tt"><i class="fa-solid fa-moon" id="ti"></i></button>
-</nav>
+<!-- Wrapper to hold both elements side-by-side -->
+<div id="nav-wrapper" style="position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.6rem; align-items: center; z-index: 1000; width: max-content; max-width: 96vw;">
+  
+  <!-- The original Navigation Bar -->
+  <nav id="nav" style="position: static; transform: none; margin: 0;">
+    <a href="#" class="logo-btn">&lt;<span id="logo-text">ABF</span>/&gt;</a>
+    <ul class="nav-links">
+      <li><a href="#hero" class="active">Home</a></li>
+      <li><a href="#exp">Exp</a></li>
+      <li><a href="#proj">Projects</a></li>
+      <li><a href="#sk">Skills</a></li>
+      <li><a href="#ach">Achieve</a></li>
+      <li><a href="#ct">Contact</a></li>
+    </ul>
+    <button class="theme-btn" id="tt"><i class="fa-solid fa-moon" id="ti"></i></button>
+  </nav>
+  
+  <!-- The Liquid Space CV Button -->
+  <a href="Ahmed_Bin_Faisal_CV.pdf" download="Ahmed_Bin_Faisal_CV.pdf" class="fluid-cv-btn">
+    <i class="fa-solid fa-download"></i>
+    <span>CV</span>
+  </a>
+</div>
 
 <section id="hero">
   <div class="hc">
@@ -775,7 +914,12 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
       <a href="https://linkedin.com/in/ahmedbinfaisal" target="_blank" class="contact-item"><i class="fa-brands fa-linkedin"></i><span>linkedin.com/in/ahmedbinfaisal</span></a>
       <a href="https://github.com/dinnerboneA" target="_blank" class="contact-item"><i class="fa-brands fa-github"></i><span>github.com/dinnerboneA</span></a>
     </div>
-    <p style="text-align:center;margin-top:2rem"><a href="#" class="btn btn-primary" id="dcv"><i class="fa-solid fa-download"></i> Download CV</a></p>
+    <p style="text-align:center;margin-top:2rem">
+      <a href="Ahmed_Bin_Faisal_CV.pdf" download="Ahmed_Bin_Faisal_CV.pdf" class="fluid-cv-btn" style="padding: 0.7rem 1.8rem; font-size: 0.95rem;">
+        <i class="fa-solid fa-download"></i>
+        <span>Download CV</span>
+      </a>
+    </p>
   </div>
 </section>
 
@@ -1151,7 +1295,8 @@ function applyDevourEffect(){
   var bw=window._bhW,bh=window._bhH,bhEH=window._bhEH;
   
   if (!cachedDevourEls) {
-    cachedDevourEls = document.querySelectorAll("nav,h1,h2,h3,p,span,div.pc,div.card,div.ach-card,div.tl-item,.contact-item,.btn,footer,.hero-stats,.hero-btns,.hero-stat,#sub,#tp,#hn,#lgt,#nav,#eb,#lg,.tb,.nl,#hero .greeting,#hero .hc,.section-title,.section-label,.hero-btns,.skill-cat,.ach-card,li,a,.tl-item .d,.tl-item .t,.tl-item .co,.logo-btn,header *,.edu-card,.ec,.cg,.cc,#dcv,.text,#doomsday-clock");
+    // FIX: Added #nav-wrapper to the list of elements
+    cachedDevourEls = document.querySelectorAll("#nav-wrapper,nav,h1,h2,h3,p,span,div.pc,div.card,div.ach-card,div.tl-item,.contact-item,.btn,footer,.hero-stats,.hero-btns,.hero-stat,#sub,#tp,#hn,#lgt,#eb,#lg,.tb,.nl,#hero .greeting,#hero .hc,.section-title,.section-label,.hero-btns,.skill-cat,.ach-card,li,a,.tl-item .d,.tl-item .t,.tl-item .co,.logo-btn,header *,.edu-card,.ec,.cg,.cc,#dcv,.text,#doomsday-clock");
   }
   var els = cachedDevourEls;
   var len=els.length,dp=devourProgress;
@@ -1172,8 +1317,9 @@ function applyDevourEffect(){
     // Check if element is currently visible on the screen
     var inViewport = (rect.top < bh && rect.bottom > 0 && rect.left < bw && rect.right > 0);
     
-    var isNav = (el.tagName && el.tagName.toLowerCase() === 'nav') || el.id === 'nav';
-    var baseTransform = isNav ? "translateX(-50%) " : "";
+    // FIX: Apply the center alignment transform to the wrapper instead of the nav
+    var isNavWrapper = el.id === 'nav-wrapper';
+    var baseTransform = isNavWrapper ? "translateX(-50%) " : "";
 
     // Safely cache original text
     if(!el.dataset.checkedTxt){
@@ -1199,7 +1345,7 @@ function applyDevourEffect(){
       el.style.filter="blur("+bl+"px)";
       el.style.opacity=String(1-p2*0.2);
 
-      // SCRAMBLE LOGIC: Throttled, and restricted to visible elements only
+      // SCRAMBLE LOGIC
       if(inViewport && el.dataset.orig && Math.random() < 0.3) {
         if(Math.random() < p2) {
           var orig = el.dataset.orig;
@@ -1216,9 +1362,8 @@ function applyDevourEffect(){
     else if(devourPhase===3){
       var p3=(dp-0.60)/0.40;
       
-      if(el.closest("nav")){
+      if(el.closest("#nav-wrapper") && !isNavWrapper){
         el.style.opacity=String(1-Math.pow(p3,3));
-        if(isNav) el.style.transform = baseTransform;
         el.style.filter = "url(#dust) blur("+(p3*3)+"px)";
         continue;
       } 
@@ -1226,8 +1371,6 @@ function applyDevourEffect(){
       var pull=Math.pow(p3,2)*2;
       var sc=1-pull*0.9;if(sc<0.02)sc=0.02;
       
-      // FIX: Use a smooth deterministic rotation based on the element's index (i) 
-      // instead of randomizing it every frame. This stops the violent vibration.
       var dir = (i % 2 === 0 ? 1 : -1); 
       var rot = dir * pull * 45; 
       
@@ -1241,7 +1384,7 @@ function applyDevourEffect(){
     }else{
       // Phase 0 / Reset: Restore everything back to normal
       el.style.opacity="1";
-      el.style.transform = isNav ? baseTransform : "none";
+      el.style.transform = isNavWrapper ? baseTransform : "none";
       el.style.filter="none";
       
       // Instantly revert text to the original unscrambled state
