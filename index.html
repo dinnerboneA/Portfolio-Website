@@ -606,6 +606,165 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
 
 
 
+/* ===== DEVELOPER DROPDOWN MENU (MATCHING NAVBAR) ===== */
+.dev-dropdown {
+  position: absolute;
+  top: calc(100% + 15px);
+  left: 0;
+  /* Match the navbar's exact glassmorphism styling */
+  background: rgba(10, 10, 30, 0.88);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 1.5rem;
+  padding: 0.8rem;
+  min-width: 240px;
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.12);
+  
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+/* Light Mode Match */
+.light .dev-dropdown {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.dev-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dev-dropdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  border-radius: 1rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dev-dropdown-item:hover {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--text);
+}
+
+.dev-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.dev-item-left i {
+  width: 16px;
+  text-align: center;
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+
+/* Toggle Switch UI */
+.toggle-switch {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.light .toggle-switch {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.toggle-switch::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  background: var(--text2);
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Active State for the Switch */
+.toggle-switch.active {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--primary);
+}
+
+.toggle-switch.active::after {
+  left: calc(100% - 16px);
+  background: var(--primary);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+/* Zen Mode Hidden State */
+body.zen-mode #nav-wrapper,
+body.zen-mode section,
+body.zen-mode footer,
+body.zen-mode #bat,
+body.zen-mode #doomsday-clock {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: opacity 1s, visibility 1s !important;
+}
+
+/* Zen Mode Restore Button */
+#zen-restore-btn {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--card);
+  border: 1px solid var(--primary);
+  color: var(--text);
+  padding: 0.8rem 1.5rem;
+  border-radius: 3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 9999;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+}
+
+body.zen-mode.mouse-active #zen-restore-btn {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+#zen-restore-btn:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+
+
+
+
+
 </style>
 </head>
 <body>
@@ -613,6 +772,7 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
   <canvas id="bg-canvas" class="front"></canvas>
   <canvas id="bg-canvas-back" class="back"></canvas>
 </div>
+<button id="zen-restore-btn" onclick="toggleContentVisibility()"><i class="fa-solid fa-eye"></i> Restore Content</button>
 <div id="pl"><img src="loader.gif" width="100"></div>
 <div id="bat"><img id="bat-img" src=""></div>
 
@@ -632,7 +792,39 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
   
   <!-- The original Navigation Bar -->
   <nav id="nav" style="position: static; transform: none; margin: 0;">
-    <a href="#" class="logo-btn">&lt;<span id="logo-text">ABF</span>/&gt;</a>
+    <!-- Developer Dropdown Container -->
+    <div style="position: relative;" id="dev-menu-container">
+      <a href="#" class="logo-btn" id="dev-logo-btn" onclick="toggleDevMenu(event)">&lt;<span id="logo-text">ABF</span>/&gt;</a>
+      
+      <!-- The Premium Glass Dropdown Menu -->
+      <div id="dev-dropdown" class="dev-dropdown">
+        <div class="dev-dropdown-item" onclick="toggleFullscreen()">
+          <div class="dev-item-left"><i class="fa-solid fa-expand"></i> Fullscreen</div>
+          <div class="toggle-switch" id="toggle-fs"></div>
+        </div>
+        <div class="dev-dropdown-item" onclick="toggleContentVisibility()">
+          <div class="dev-item-left"><i class="fa-solid fa-eye-slash"></i> Zen Mode</div>
+          <div class="toggle-switch" id="toggle-zen"></div>
+        </div>
+        <div class="dev-dropdown-item" onclick="toggleBat()">
+          <div class="dev-item-left"><i class="fa-solid fa-ghost"></i> Bat Cursor</div>
+          <div class="toggle-switch active" id="toggle-bat"></div>
+        </div>
+        <div class="dev-dropdown-item" onclick="toggleDoomsdayClock()">
+          <div class="dev-item-left"><i class="fa-solid fa-clock"></i> Doomsday Clock</div>
+          <div class="toggle-switch active" id="toggle-clock"></div>
+        </div>
+        <div class="dev-dropdown-item" onclick="toggleDevourAnimation()">
+          <div class="dev-item-left"><i class="fa-solid fa-stop-circle"></i> Devour Anim</div>
+          <div class="toggle-switch active" id="toggle-devour"></div>
+        </div>
+        <div class="dev-dropdown-item" onclick="toggleMobileOptimization()">
+          <div class="dev-item-left"><i class="fa-solid fa-bolt"></i> Optimizations</div>
+          <div class="toggle-switch" id="toggle-opt"></div>
+        </div>
+      </div>
+    </div>
+
     <ul class="nav-links">
       <li><a href="#hero" class="active">Home</a></li>
       <li><a href="#exp">Exp</a></li>
@@ -2180,6 +2372,201 @@ document.querySelectorAll('.pc').forEach(function(card) {
 })();
 
 
+
+
+
+
+
+// ===== DEVELOPER MENU LOGIC =====
+
+// Helper: Load a saved boolean from memory with a fallback default
+function loadSetting(key, defaultVal) {
+  const saved = localStorage.getItem(key);
+  return saved !== null ? saved === 'true' : defaultVal;
+}
+
+// 1. Toggle Menu Visibility
+function toggleDevMenu(e) {
+  e.preventDefault();
+  document.getElementById('dev-dropdown').classList.toggle('active');
+}
+
+document.addEventListener('click', function(e) {
+  const container = document.getElementById('dev-menu-container');
+  if (container && !container.contains(e.target)) {
+    document.getElementById('dev-dropdown').classList.remove('active');
+  }
+});
+
+// 2. Fullscreen Toggle (Transient state, not saved to memory)
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(err => {});
+  } else {
+    document.exitFullscreen();
+  }
+}
+// Sync the visual switch if fullscreen is exited by pressing the ESC key
+document.addEventListener('fullscreenchange', () => {
+  const sw = document.getElementById('toggle-fs');
+  if(sw) sw.classList.toggle('active', !!document.fullscreenElement);
+});
+
+// 3. Zen Mode (Hide Content)
+let zenTimer;
+function toggleContentVisibility(forceState = null) {
+  const isZen = forceState !== null ? forceState : !document.body.classList.contains('zen-mode');
+  
+  document.body.classList.toggle('zen-mode', isZen);
+  const sw = document.getElementById('toggle-zen');
+  if(sw) sw.classList.toggle('active', isZen);
+  
+  // Save preference to memory
+  localStorage.setItem('dev_zen', isZen);
+  
+  if (isZen) {
+    document.addEventListener('mousemove', handleZenMouseMove);
+  } else {
+    document.removeEventListener('mousemove', handleZenMouseMove);
+    document.body.classList.remove('mouse-active');
+    clearTimeout(zenTimer);
+  }
+}
+
+function handleZenMouseMove() {
+  document.body.classList.add('mouse-active');
+  clearTimeout(zenTimer);
+  zenTimer = setTimeout(() => document.body.classList.remove('mouse-active'), 2000);
+}
+
+// 4. Toggle Bat Cursor
+var batEnabled = loadSetting('dev_bat', true);
+function toggleBat(forceState = null) {
+  batEnabled = forceState !== null ? forceState : !batEnabled;
+  localStorage.setItem('dev_bat', batEnabled);
+  
+  const sw = document.getElementById('toggle-bat');
+  if(sw) sw.classList.toggle('active', batEnabled);
+  
+  if (!batEnabled && typeof hb === 'function') hb();
+}
+
+// Intercept original bat spawner
+const originalSb = sb;
+sb = function(mx, my) {
+  if (!batEnabled) return;
+  originalSb(mx, my);
+};
+
+// 5. Toggle Doomsday Clock Visuals
+var clockVisualsEnabled = loadSetting('dev_clock', true);
+function toggleDoomsdayClock(forceState = null) {
+  clockVisualsEnabled = forceState !== null ? forceState : !clockVisualsEnabled;
+  localStorage.setItem('dev_clock', clockVisualsEnabled);
+  
+  const sw = document.getElementById('toggle-clock');
+  if(sw) sw.classList.toggle('active', clockVisualsEnabled);
+  
+  const clockEl = document.getElementById('doomsday-clock');
+  if (clockEl) clockEl.style.display = clockVisualsEnabled ? 'block' : 'none';
+}
+
+// 6. Toggle Devour Animation
+var devourEnabled = loadSetting('dev_devour', true);
+function toggleDevourAnimation(forceState = null) {
+  devourEnabled = forceState !== null ? forceState : !devourEnabled;
+  localStorage.setItem('dev_devour', devourEnabled);
+  
+  const sw = document.getElementById('toggle-devour');
+  if(sw) sw.classList.toggle('active', devourEnabled);
+  
+  if (!devourEnabled && devouring) {
+    if (typeof startRetreat === 'function') startRetreat(); 
+  }
+}
+
+// Intercept original devour starter
+const originalStartDevour = startDevour;
+startDevour = function() {
+  if (!devourEnabled) return;
+  originalStartDevour();
+};
+
+// 7. Toggle Optimizations
+// Defaults to true on mobile, false on desktop, unless user explicitly saved a preference
+var isOptimized = loadSetting('dev_opt', window.innerWidth < 768);
+
+function toggleMobileOptimization(forceState = null) {
+  isOptimized = forceState !== null ? forceState : !isOptimized;
+  localStorage.setItem('dev_opt', isOptimized);
+  applyOptimizations();
+}
+
+function applyOptimizations() {
+  const sw = document.getElementById('toggle-opt');
+  if(sw) sw.classList.toggle('active', isOptimized);
+  
+  if (isOptimized) {
+    // Apply Global Flags
+    window.DEBUG_QUALITY = 0.5; 
+    window.DUST_QUALITY = 1;    
+    window.ENABLE_DEVOUR_ON_MOBILE = false;
+    
+    // Force off visual features temporarily without wiping their explicit memory saves
+    batEnabled = false;
+    clockVisualsEnabled = false;
+    devourEnabled = false;
+    
+    // Slide all switches to the OFF position
+    ['toggle-bat', 'toggle-clock', 'toggle-devour'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.classList.remove('active');
+    });
+    
+    if (typeof hb === 'function') hb();
+    const clockEl = document.getElementById('doomsday-clock');
+    if(clockEl) clockEl.style.display = 'none';
+    
+  } else {
+    // Restore Global Flags
+    window.DEBUG_QUALITY = 1.5; 
+    window.DUST_QUALITY = 2;    
+    window.ENABLE_DEVOUR_ON_MOBILE = true;
+    
+    // Restore features strictly based on what the user saved in memory
+    batEnabled = loadSetting('dev_bat', true);
+    clockVisualsEnabled = loadSetting('dev_clock', true);
+    devourEnabled = loadSetting('dev_devour', true);
+    
+    // Visually restore the switches to match memory
+    if(document.getElementById('toggle-bat')) document.getElementById('toggle-bat').classList.toggle('active', batEnabled);
+    if(document.getElementById('toggle-clock')) document.getElementById('toggle-clock').classList.toggle('active', clockVisualsEnabled);
+    if(document.getElementById('toggle-devour')) document.getElementById('toggle-devour').classList.toggle('active', devourEnabled);
+    
+    const clockEl = document.getElementById('doomsday-clock');
+    if(clockEl) clockEl.style.display = clockVisualsEnabled ? 'block' : 'none';
+  }
+  
+  // Trigger native window resize so WebGL recalculates graphics (if bound globally)
+  window.dispatchEvent(new Event('resize')); 
+}
+
+// === INITIALIZATION BOOT SEQUENCE ===
+function bootDevMenu() {
+  // Boot Zen Mode from memory
+  if (loadSetting('dev_zen', false)) {
+    toggleContentVisibility(true);
+  }
+  // Boot Optimizations (cascades to visually sync Bat, Clock, and Devour)
+  applyOptimizations();
+}
+
+// Safely run on boot regardless of script load timing
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bootDevMenu);
+} else {
+  bootDevMenu();
+}
 
 
 
