@@ -1872,7 +1872,7 @@ function updateDoomsdayClock() {
   // Phase 3: The clock gets devoured! 
   // We freeze the text at zero and let applyDevourEffect() take over the CSS transforms.
   if (devourPhase >= 3) {
-    timeEl.textContent = "00:00:00:00";
+    timeEl.textContent = "00:00:00:01";
     requestAnimationFrame(updateDoomsdayClock);
     return; 
   }
