@@ -293,21 +293,23 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
   #nav-wrapper {
     width: 96vw !important;
     max-width: 100%;
-    gap: 0.4rem !important;
     justify-content: space-between;
+    gap: 0.4rem !important;
   }
   nav {
-    flex: 1; /* Lets the nav stretch properly next to the CV button */
+    flex: 1 1 auto; /* Allows the nav to stretch */
+    min-width: 0 !important; /* CRITICAL: Forces the pill to shrink and fit the screen */
     width: auto !important;
-    padding: 0.4rem 0.8rem !important; /* Restores healthy breathing room */
-    gap: 0.5rem !important;
+    padding: 0.4rem 0.6rem !important;
+    gap: 0.4rem !important;
     justify-content: space-between;
   }
   .nav-links {
     display: flex;
-    flex: 1;
-    max-width: 140px; /* Limits the window to exactly 3 items */
-    margin: 0 auto; /* Centers the scroll window between the logo and moon */
+    flex: 1 1 auto; /* Fills the available space inside the nav */
+    min-width: 0 !important; /* CRITICAL: Reactivates the carousel overflow */
+    
+    margin: 0;
     gap: 1.2rem;
     overflow-x: auto;
     white-space: nowrap;
@@ -315,11 +317,12 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
     scrollbar-width: none; 
     -webkit-overflow-scrolling: touch; 
     
-    /* PIXEL-PERFECT MASK: Guarantees text fades out exactly 25px before hitting the icons */
+    /* Restored slot-machine mask */
     -webkit-mask-image: linear-gradient(to right, transparent 0px, black 25px, black calc(100% - 25px), transparent 100%);
     mask-image: linear-gradient(to right, transparent 0px, black 25px, black calc(100% - 25px), transparent 100%);
     
-    padding: 0 45px; 
+    position: relative;
+    padding: 0 45px; /* Ensures outer links can still scroll to the dead center */
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
   }
@@ -334,17 +337,16 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
   }
   .logo-btn {
     font-size: 0.85rem;
-    flex-shrink: 0; 
+    flex-shrink: 0; /* Prevents text squishing */
   }
   .theme-btn {
     font-size: 1rem;
     flex-shrink: 0; 
   }
   
-  /* RESTORED FULL CV BUTTON */
   .fluid-cv-btn { 
-    padding: 0.45rem 1rem !important; 
-    flex-shrink: 0; 
+    padding: 0.45rem 0.8rem !important; 
+    flex-shrink: 0; /* Prevents button squishing */
   }
   .fluid-cv-btn span { 
     display: inline !important; /* Keeps the "CV" text visible */
@@ -1559,9 +1561,8 @@ lg.addEventListener("mouseleave",()=>{clearTimeout(lt);lgt.textContent="ABF";lt=
 const nav = document.getElementById("nav");
 const secs = document.querySelectorAll("section[id]");
 const nls = document.querySelectorAll(".nav-links a");
-const nlContainer = document.querySelector(".nav-links");
 
-let lastActive = ""; // Memory variable to prevent animation stutter
+let lastActive = ""; 
 
 window.addEventListener("scroll", () => {
   const sy = window.scrollY;
@@ -1570,22 +1571,16 @@ window.addEventListener("scroll", () => {
   let cur = "";
   secs.forEach(s => { if(sy + 150 >= s.offsetTop) cur = s.getAttribute("id"); });
   
-  // Update the glowing text colors
   nls.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + cur));
   
-  // ONLY trigger the smooth carousel spin when crossing into a NEW section
+  // Use the browser's native centering engine
   if (cur !== lastActive && cur !== "") {
     lastActive = cur;
-    
     if (window.innerWidth < 768) {
       const activeLink = document.querySelector(`.nav-links a[href="#${cur}"]`);
       if (activeLink) {
-        const li = activeLink.parentElement;
-        // Calculate exact center
-        const scrollPos = li.offsetLeft - (nlContainer.offsetWidth / 2) + (li.offsetWidth / 2);
-        
-        // Execute the smooth scroll once per section change
-        nlContainer.scrollTo({ left: scrollPos, behavior: "smooth" });
+        // Targets the <li> wrapper and tells it to slide to the exact center
+        activeLink.parentElement.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
       }
     }
   }
