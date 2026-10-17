@@ -293,21 +293,16 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
   #nav-wrapper {
     width: 96vw !important;
     max-width: 100%;
-    gap: 0.3rem !important;
+    gap: 0.4rem !important;
+    justify-content: space-between; /* Pushes the nav and button apart */
   }
   nav {
-    flex-grow: 1;
+    flex-grow: 0; /* Stops the navbar from stretching too far */
     width: auto !important;
     padding: 0.4rem 0.6rem !important;
-    gap: 0.5rem !important;
-    justify-content: space-between;
+    gap: 0.4rem !important;
   }
   .nav-links {
-    /* ACT LIKE A SPRING: Fill all remaining space between the logo and the moon */
-    flex-grow: 1;
-    width: 0; 
-    max-width: none; 
-    
     display: flex;
     gap: 1.2rem;
     overflow-x: auto;
@@ -316,13 +311,14 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
     scrollbar-width: none; 
     -webkit-overflow-scrolling: touch; 
     
-    /* SHARPER MASK: Only fades exactly 30 pixels on the left and right edges */
-    -webkit-mask-image: linear-gradient(to right, transparent 0px, black 30px, black calc(100% - 30px), transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0px, black 30px, black calc(100% - 30px), transparent 100%);
+    /* Smooth fading edges */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%);
     
+    /* Strict window size to only fit ~3 items */
+    max-width: 130px; 
     position: relative;
-    /* Percentage padding ensures the first and last links can still reach the dead center */
-    padding: 0 35%; 
+    padding: 0 45px; 
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
   }
@@ -343,16 +339,18 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
     font-size: 1rem;
     flex-shrink: 0; 
   }
+  
+  /* RESTORED FULL CV BUTTON */
   .fluid-cv-btn { 
-    padding: 0.45rem 0.8rem !important; 
+    padding: 0.45rem 1rem !important; 
     flex-shrink: 0; 
   }
   .fluid-cv-btn span { 
-    display: none !important; 
+    display: inline !important; /* Brings the "CV" text back */
+    font-size: 0.75rem;
   }
   .fluid-cv-btn i {
-    margin: 0;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
   }
 }
 
