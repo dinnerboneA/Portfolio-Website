@@ -815,7 +815,7 @@ body.zen-mode.mouse-active #zen-restore-btn {
           <div class="toggle-switch active" id="toggle-clock"></div>
         </div>
         <div class="dev-dropdown-item" onclick="toggleDevourAnimation()">
-          <div class="dev-item-left"><i class="fa-solid fa-stop-circle"></i> Devour Anim</div>
+          <div class="dev-item-left"><i class="fa-solid fa-stop-circle"></i> Devour Animation</div>
           <div class="toggle-switch active" id="toggle-devour"></div>
         </div>
         <div class="dev-dropdown-item" onclick="toggleMobileOptimization()">
@@ -1164,6 +1164,8 @@ body.zen-mode.mouse-active #zen-restore-btn {
 </footer>
 
 <script>
+// Define optimization state instantly so the 3D canvases know what to do on load
+window.isOptimized = localStorage.getItem('dev_opt') !== null ? localStorage.getItem('dev_opt') === 'true' : window.innerWidth < 768; 
 // ===== IDLE TIMER & DEVOUR STATE =====
 var lastActivity=Date.now();
 // devourPhase: 0=idle, 1=zoom/grow, 2=shake, 3=consume
@@ -1301,11 +1303,11 @@ function applyDevourEffect(){
 
     time=ts*0.001;
 
-    // Smooth cursor tracking (Locks center and disables speed-up on mobile)
-    if (typeof isMobile !== 'undefined' && isMobile) { targetMx = CX; targetMy = CY; velX = 0; velY = 0; }
+    // Smooth cursor tracking (Locks center and disables speed-up when optimized)
+    if (window.isOptimized) { targetMx = CX; targetMy = CY; velX = 0; velY = 0; }
     smx+=(targetMx-smx)*0.05;smy+=(targetMy-smy)*0.05;
     var cursorSpeed=Math.hypot(targetMx-smx,targetMy-smy);
-    var speedNorm = (typeof isMobile !== 'undefined' && isMobile) ? 0 : Math.min(cursorSpeed/EH,2);
+    var speedNorm = window.isOptimized ? 0 : Math.min(cursorSpeed/EH,2);
 
     // Shake (camera jitter when devouring)
     var shake = (devourProgress > 0 && devourPhase < 3) ? devourProgress * devourProgress * 20 : 0;
@@ -1423,7 +1425,7 @@ function applyDevourEffect(){
   }
 
   document.addEventListener("mousemove",function(e){
-    if (typeof isMobile !== 'undefined' && isMobile) return; // Ignore on mobile
+    if (window.isOptimized) return; // Ignore on optimized mode
     targetMx=e.clientX;targetMy=e.clientY;
     velX=(e.clientX-smx)*0.1;velY=(e.clientY-smy)*0.1;
   });
@@ -2066,14 +2068,13 @@ document.querySelectorAll('.pc').forEach(function(card) {
   var lastMobileW2 = window.innerWidth;
 
   function resize() {
-    // Base quality thresholds multiplied by your single debug dial
-    var baseRatio = window.innerWidth < 768 ? 0.75 : 0.8;
-    var pixelRatio = baseRatio * DEBUG_QUALITY;
+    // Scales down resolution dynamically based on optimization state
+    var baseRatio = window.isOptimized ? 0.4 : 0.8;
+    var pixelRatio = baseRatio * (window.DEBUG_QUALITY || 1.5);
     
     cvs.width = window.innerWidth * pixelRatio;
     cvs.height = window.innerHeight * pixelRatio;
     
-    // CSS always forces it to fill the screen visually regardless of render resolution
     cvs.style.width = window.innerWidth + "px";
     cvs.style.height = window.innerHeight + "px";
     
@@ -2335,7 +2336,7 @@ document.querySelectorAll('.pc').forEach(function(card) {
   var tgtMx = 0, tgtMy = 0, mx = 0, my = 0;
 
   document.addEventListener("mousemove", function(e) {
-    if (window.innerWidth < 768) return;
+    if (window.isOptimized) return; // Ignore on optimized mode
     tgtMx = ((e.clientX / window.innerWidth) - 0.5) * 2.0;
     tgtMy = ((e.clientY / window.innerHeight) - 0.5) * 2.0;
   });
@@ -2349,8 +2350,8 @@ document.querySelectorAll('.pc').forEach(function(card) {
       return; 
     }
 
-    // Forcefully lock the camera panning to zero on mobile to ignore rogue scroll events
-    if (window.innerWidth < 768) {
+    // Forcefully lock the camera panning to zero when optimized
+    if (window.isOptimized) {
       mx = 0; my = 0; tgtMx = 0; tgtMy = 0;
     } else {
       mx += (tgtMx - mx) * 0.05;
@@ -2493,75 +2494,42 @@ startDevour = function() {
 };
 
 // 7. Toggle Optimizations
-// Defaults to true on mobile, false on desktop, unless user explicitly saved a preference
-var isOptimized = loadSetting('dev_opt', window.innerWidth < 768);
-
 function toggleMobileOptimization(forceState = null) {
-  isOptimized = forceState !== null ? forceState : !isOptimized;
-  localStorage.setItem('dev_opt', isOptimized);
+  window.isOptimized = forceState !== null ? forceState : !window.isOptimized;
+  localStorage.setItem('dev_opt', window.isOptimized);
   applyOptimizations();
 }
 
 function applyOptimizations() {
   const sw = document.getElementById('toggle-opt');
-  if(sw) sw.classList.toggle('active', isOptimized);
+  if(sw) sw.classList.toggle('active', window.isOptimized);
   
-  if (isOptimized) {
-    // Apply Global Flags
+  if (window.isOptimized) {
     window.DEBUG_QUALITY = 0.5; 
-    window.DUST_QUALITY = 1;    
-    window.ENABLE_DEVOUR_ON_MOBILE = false;
     
-    // Force off visual features temporarily without wiping their explicit memory saves
-    batEnabled = false;
-    clockVisualsEnabled = false;
+    // Force devour off temporarily
     devourEnabled = false;
-    
-    // Slide all switches to the OFF position
-    ['toggle-bat', 'toggle-clock', 'toggle-devour'].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.classList.remove('active');
-    });
-    
-    if (typeof hb === 'function') hb();
-    const clockEl = document.getElementById('doomsday-clock');
-    if(clockEl) clockEl.style.display = 'none';
+    if(document.getElementById('toggle-devour')) document.getElementById('toggle-devour').classList.remove('active');
+    if (typeof startRetreat === 'function' && devouring) startRetreat(); 
     
   } else {
-    // Restore Global Flags
     window.DEBUG_QUALITY = 1.5; 
-    window.DUST_QUALITY = 2;    
-    window.ENABLE_DEVOUR_ON_MOBILE = true;
     
-    // Restore features strictly based on what the user saved in memory
-    batEnabled = loadSetting('dev_bat', true);
-    clockVisualsEnabled = loadSetting('dev_clock', true);
+    // Restore devour strictly from memory
     devourEnabled = loadSetting('dev_devour', true);
-    
-    // Visually restore the switches to match memory
-    if(document.getElementById('toggle-bat')) document.getElementById('toggle-bat').classList.toggle('active', batEnabled);
-    if(document.getElementById('toggle-clock')) document.getElementById('toggle-clock').classList.toggle('active', clockVisualsEnabled);
     if(document.getElementById('toggle-devour')) document.getElementById('toggle-devour').classList.toggle('active', devourEnabled);
-    
-    const clockEl = document.getElementById('doomsday-clock');
-    if(clockEl) clockEl.style.display = clockVisualsEnabled ? 'block' : 'none';
   }
   
-  // Trigger native window resize so WebGL recalculates graphics (if bound globally)
+  // Trigger WebGL to recalculate resolution instantly
   window.dispatchEvent(new Event('resize')); 
 }
 
 // === INITIALIZATION BOOT SEQUENCE ===
 function bootDevMenu() {
-  // Boot Zen Mode from memory
-  if (loadSetting('dev_zen', false)) {
-    toggleContentVisibility(true);
-  }
-  // Boot Optimizations (cascades to visually sync Bat, Clock, and Devour)
+  if (loadSetting('dev_zen', false)) toggleContentVisibility(true);
   applyOptimizations();
 }
 
-// Safely run on boot regardless of script load timing
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", bootDevMenu);
 } else {
