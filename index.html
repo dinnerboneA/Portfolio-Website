@@ -294,33 +294,35 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
     width: 96vw !important;
     max-width: 100%;
     gap: 0.3rem !important;
-    justify-content: space-between;
   }
   nav {
     flex-grow: 1;
     width: auto !important;
     padding: 0.4rem 0.6rem !important;
-    gap: 0.3rem !important;
+    gap: 0.5rem !important;
     justify-content: space-between;
   }
   .nav-links {
+    /* ACT LIKE A SPRING: Fill all remaining space between the logo and the moon */
     flex-grow: 1;
+    width: 0; 
+    max-width: none; 
+    
     display: flex;
     gap: 1.2rem;
     overflow-x: auto;
     white-space: nowrap;
-    -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
-    scrollbar-width: none; /* Hide scrollbar Firefox */
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
     -webkit-overflow-scrolling: touch; 
     
-    /* The Fading Edge Magic */
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%);
+    /* SHARPER MASK: Only fades exactly 30 pixels on the left and right edges */
+    -webkit-mask-image: linear-gradient(to right, transparent 0px, black 30px, black calc(100% - 30px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0px, black 30px, black calc(100% - 30px), transparent 100%);
     
-    /* Forces the tight window so only ~3 items are visible */
-    max-width: 140px; 
     position: relative;
-    padding: 0 45px; /* Allows the first (Home) and last (Contact) items to reach the center */
+    /* Percentage padding ensures the first and last links can still reach the dead center */
+    padding: 0 35%; 
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
   }
@@ -328,7 +330,7 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
     display: none; 
   }
   .nav-links li {
-    scroll-snap-align: center; /* Magnetically snaps links to the center when swiped */
+    scroll-snap-align: center; 
   }
   .nav-links a {
     font-size: 0.75rem;
