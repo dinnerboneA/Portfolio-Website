@@ -1877,7 +1877,11 @@ function updateDoomsdayClock() {
     return; 
   }
   
-  var shouldShow = (bActive || devouring) && devourPhase < 3 && !retreating;
+  // FIX: Decouple from the Bat Cursor. Trigger purely based on the 5-second idle timer.
+  var isIdleEnough = (Date.now() - lastActivity) >= 5000;
+  if (typeof isViewingProjects !== 'undefined' && isViewingProjects) isIdleEnough = false;
+
+  var shouldShow = (isIdleEnough || devouring) && devourPhase < 3 && !retreating;
   
   if (shouldShow) {
     clock.classList.remove('h');
