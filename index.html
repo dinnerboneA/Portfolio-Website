@@ -294,16 +294,20 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
     width: 96vw !important;
     max-width: 100%;
     gap: 0.4rem !important;
-    justify-content: space-between; /* Pushes the nav and button apart */
+    justify-content: space-between;
   }
   nav {
-    flex-grow: 0; /* Stops the navbar from stretching too far */
+    flex: 1; /* Lets the nav stretch properly next to the CV button */
     width: auto !important;
-    padding: 0.4rem 0.6rem !important;
-    gap: 0.4rem !important;
+    padding: 0.4rem 0.8rem !important; /* Restores healthy breathing room */
+    gap: 0.5rem !important;
+    justify-content: space-between;
   }
   .nav-links {
     display: flex;
+    flex: 1;
+    max-width: 140px; /* Limits the window to exactly 3 items */
+    margin: 0 auto; /* Centers the scroll window between the logo and moon */
     gap: 1.2rem;
     overflow-x: auto;
     white-space: nowrap;
@@ -311,13 +315,10 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
     scrollbar-width: none; 
     -webkit-overflow-scrolling: touch; 
     
-    /* Smooth fading edges */
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%);
+    /* PIXEL-PERFECT MASK: Guarantees text fades out exactly 25px before hitting the icons */
+    -webkit-mask-image: linear-gradient(to right, transparent 0px, black 25px, black calc(100% - 25px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0px, black 25px, black calc(100% - 25px), transparent 100%);
     
-    /* Strict window size to only fit ~3 items */
-    max-width: 130px; 
-    position: relative;
     padding: 0 45px; 
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
@@ -346,7 +347,7 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
     flex-shrink: 0; 
   }
   .fluid-cv-btn span { 
-    display: inline !important; /* Brings the "CV" text back */
+    display: inline !important; /* Keeps the "CV" text visible */
     font-size: 0.75rem;
   }
   .fluid-cv-btn i {
