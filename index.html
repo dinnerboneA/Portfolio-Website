@@ -293,43 +293,60 @@ section{min-height:100vh;padding:6rem 6% 4rem;position:relative}
   #nav-wrapper {
     width: 96vw !important;
     max-width: 100%;
-    gap: 0.4rem !important;
+    gap: 0.3rem !important;
+    justify-content: space-between;
   }
   nav {
     flex-grow: 1;
     width: auto !important;
-    padding: 0.4rem 0.8rem !important;
-    gap: 0.5rem !important;
+    padding: 0.4rem 0.6rem !important;
+    gap: 0.3rem !important;
+    justify-content: space-between;
   }
   .nav-links {
-    gap: 0.6rem;
+    flex-grow: 1;
+    display: flex;
+    gap: 1.2rem;
     overflow-x: auto;
     white-space: nowrap;
     -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
     scrollbar-width: none; /* Hide scrollbar Firefox */
-    /* Add smooth momentum scrolling on iOS */
     -webkit-overflow-scrolling: touch; 
+    
+    /* The Fading Edge Magic */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%);
+    
+    /* Forces the tight window so only ~3 items are visible */
+    max-width: 140px; 
+    position: relative;
+    padding: 0 45px; /* Allows the first (Home) and last (Contact) items to reach the center */
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
   }
   .nav-links::-webkit-scrollbar {
-    display: none; /* Hide scrollbar Chrome/Safari/Opera */
+    display: none; 
+  }
+  .nav-links li {
+    scroll-snap-align: center; /* Magnetically snaps links to the center when swiped */
   }
   .nav-links a {
     font-size: 0.75rem;
   }
   .logo-btn {
     font-size: 0.85rem;
-    flex-shrink: 0; /* Prevents the logo from squishing */
+    flex-shrink: 0; 
   }
   .theme-btn {
     font-size: 1rem;
-    flex-shrink: 0; /* Prevents the moon/sun from squishing */
+    flex-shrink: 0; 
   }
   .fluid-cv-btn { 
     padding: 0.45rem 0.8rem !important; 
-    flex-shrink: 0; /* Prevents the CV button from squishing */
+    flex-shrink: 0; 
   }
   .fluid-cv-btn span { 
-    display: none !important; /* Hides "CV" text to save space */
+    display: none !important; 
   }
   .fluid-cv-btn i {
     margin: 0;
@@ -1538,14 +1555,39 @@ lg.addEventListener("mouseenter",()=>{clearTimeout(lt);scr(lgt,"ABF",500)});
 lg.addEventListener("mouseleave",()=>{clearTimeout(lt);lgt.textContent="ABF";lt=setTimeout(function f(){scr(lgt,"ABF",500);lt=setTimeout(f,3500+Math.random()*3000)},3000)});
 
 // -- Navbar scroll
-const nav=document.getElementById("nav");
-const secs=document.querySelectorAll("section[id]");
-const nls=document.querySelectorAll(".nav-links a");
-window.addEventListener("scroll",()=>{
-  const sy=window.scrollY;
-  nav.classList.toggle("scrolled",sy>50);
-  let cur="";secs.forEach(s=>{if(sy+150>=s.offsetTop)cur=s.getAttribute("id")});
-  nls.forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+cur));
+const nav = document.getElementById("nav");
+const secs = document.querySelectorAll("section[id]");
+const nls = document.querySelectorAll(".nav-links a");
+const nlContainer = document.querySelector(".nav-links");
+
+let lastActive = ""; // Memory variable to prevent animation stutter
+
+window.addEventListener("scroll", () => {
+  const sy = window.scrollY;
+  nav.classList.toggle("scrolled", sy > 50);
+  
+  let cur = "";
+  secs.forEach(s => { if(sy + 150 >= s.offsetTop) cur = s.getAttribute("id"); });
+  
+  // Update the glowing text colors
+  nls.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + cur));
+  
+  // ONLY trigger the smooth carousel spin when crossing into a NEW section
+  if (cur !== lastActive && cur !== "") {
+    lastActive = cur;
+    
+    if (window.innerWidth < 768) {
+      const activeLink = document.querySelector(`.nav-links a[href="#${cur}"]`);
+      if (activeLink) {
+        const li = activeLink.parentElement;
+        // Calculate exact center
+        const scrollPos = li.offsetLeft - (nlContainer.offsetWidth / 2) + (li.offsetWidth / 2);
+        
+        // Execute the smooth scroll once per section change
+        nlContainer.scrollTo({ left: scrollPos, behavior: "smooth" });
+      }
+    }
+  }
 });
 
 // -- Theme
